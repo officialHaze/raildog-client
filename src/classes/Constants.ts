@@ -12,4 +12,5 @@ export class InputTypes {
   public static USERNAME = "USERNAME";
   public static PHONE = "PHONE";
   public static PASSWORD = "PASSWORD";
+  public static CONFIRM_PASSWORD = "CONFIRM_PASSWORD";
 }

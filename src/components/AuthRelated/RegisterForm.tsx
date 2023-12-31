@@ -4,12 +4,18 @@ import RegistrationData from "../../interfaces/RegistrationData";
 import EmailInput from "../InputRelated/EmailInput";
 import UsernameInput from "../InputRelated/UsernameInput";
 import PhoneInput from "../InputRelated/PhoneInput";
+import PasswordInput from "../InputRelated/PasswordInput";
 
 interface Props {
   registerData: RegistrationData;
   setRegisterData: React.Dispatch<React.SetStateAction<RegistrationData>>;
   labelPos: RegistrationData;
   setLabelPos: React.Dispatch<React.SetStateAction<RegistrationData>>;
+  emailInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  usernameInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  phoneInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  passwordInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  confirmPassInputRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export default function RegisterForm({
@@ -17,6 +23,11 @@ export default function RegisterForm({
   setRegisterData,
   labelPos,
   setLabelPos,
+  emailInputRef,
+  usernameInputRef,
+  phoneInputRef,
+  passwordInputRef,
+  confirmPassInputRef,
 }: Props) {
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
@@ -43,6 +54,20 @@ export default function RegisterForm({
           setLabelPos({
             ...labelPos,
             phone: "-translate-y-[1.45rem] text-sm text-blue-500",
+          });
+          break;
+
+        case InputTypes.PASSWORD:
+          setLabelPos({
+            ...labelPos,
+            password: "-translate-y-[1.45rem] text-sm text-blue-500",
+          });
+          break;
+
+        case InputTypes.CONFIRM_PASSWORD:
+          setLabelPos({
+            ...labelPos,
+            confirmPassword: "-translate-y-[1.45rem] text-sm text-blue-500",
           });
           break;
 
@@ -88,6 +113,22 @@ export default function RegisterForm({
             });
           break;
 
+        case InputTypes.PASSWORD:
+          !registerData.password &&
+            setLabelPos({
+              ...labelPos,
+              password: "",
+            });
+          break;
+
+        case InputTypes.CONFIRM_PASSWORD:
+          !registerData.confirmPassword &&
+            setLabelPos({
+              ...labelPos,
+              confirmPassword: "",
+            });
+          break;
+
         default:
           break;
       }
@@ -125,6 +166,20 @@ export default function RegisterForm({
           });
         break;
 
+      case InputTypes.PASSWORD:
+        setRegisterData({
+          ...registerData,
+          password: value,
+        });
+        break;
+
+      case InputTypes.CONFIRM_PASSWORD:
+        setRegisterData({
+          ...registerData,
+          confirmPassword: value,
+        });
+        break;
+
       default:
         break;
     }
@@ -132,9 +187,38 @@ export default function RegisterForm({
 
   return (
     <form className="px-4 py-4 flex flex-col gap-6">
-      <EmailInput onChange={handleChange} value={registerData.email} labelPos={labelPos} />
-      <UsernameInput onChange={handleChange} value={registerData.username} labelPos={labelPos} />
-      <PhoneInput onChange={handleChange} value={registerData.phone} labelPos={labelPos} />
+      <EmailInput
+        ref_={emailInputRef}
+        onChange={handleChange}
+        value={registerData.email}
+        labelPos={labelPos}
+      />
+      <UsernameInput
+        ref_={usernameInputRef}
+        onChange={handleChange}
+        value={registerData.username}
+        labelPos={labelPos}
+      />
+      <PhoneInput
+        ref_={phoneInputRef}
+        onChange={handleChange}
+        value={registerData.phone}
+        labelPos={labelPos}
+      />
+      <PasswordInput
+        ref_={passwordInputRef}
+        onChange={handleChange}
+        value={registerData.password}
+        labelPos={labelPos}
+      />
+      <PasswordInput
+        ref_={confirmPassInputRef}
+        onChange={handleChange}
+        value={registerData.confirmPassword}
+        labelPos={labelPos}
+        inputName="Confirm Password*"
+        id={InputTypes.CONFIRM_PASSWORD}
+      />
     </form>
   );
 }

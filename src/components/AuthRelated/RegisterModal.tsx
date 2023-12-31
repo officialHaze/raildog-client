@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { ModalContext } from "../../App";
 import { ModalTypes } from "../../classes/Constants";
 import { IoCloseCircle } from "react-icons/io5";
@@ -21,6 +21,11 @@ export default function RegisterModal() {
     password: "",
     confirmPassword: "",
   });
+  const emailInputRef = useRef<HTMLInputElement | null>(null);
+  const usernameInputRef = useRef<HTMLInputElement | null>(null);
+  const phoneInputRef = useRef<HTMLInputElement | null>(null);
+  const passwordInputRef = useRef<HTMLInputElement | null>(null);
+  const confirmPasswordInputRef = useRef<HTMLInputElement | null>(null);
 
   const reset = () => {
     setRegisterData({
@@ -66,6 +71,11 @@ export default function RegisterModal() {
         setLabelPos={setLabelPos}
         registerData={registerData}
         setRegisterData={setRegisterData}
+        emailInputRef={emailInputRef}
+        usernameInputRef={usernameInputRef}
+        phoneInputRef={phoneInputRef}
+        passwordInputRef={passwordInputRef}
+        confirmPassInputRef={confirmPasswordInputRef}
       />
     </div>
   );
