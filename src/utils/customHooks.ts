@@ -88,3 +88,21 @@ export const usePopup = (): [
 
   return [displayPopup, setPopupDisplay];
 };
+
+export const useLoader = (): {
+  startLoader: () => void;
+  endLoader: () => void;
+  isRunning: boolean;
+} => {
+  const [startLoader, toStartLoader] = useState(false);
+
+  const start = () => {
+    toStartLoader(true);
+  };
+
+  const end = () => {
+    toStartLoader(false);
+  };
+
+  return { startLoader: start, endLoader: end, isRunning: startLoader };
+};

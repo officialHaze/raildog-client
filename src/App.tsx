@@ -8,6 +8,9 @@ import Constants, { ModalTypes } from "./classes/Constants";
 import Modal from "./components/Modal";
 import { usePopup } from "./utils/customHooks";
 import Popup from "./components/Popup";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export const ModalContext = createContext<React.Dispatch<
   React.SetStateAction<{
@@ -77,24 +80,26 @@ function App() {
   }, []);
 
   return (
-    <PopupContext.Provider value={setPopupDisplay}>
-      <div className="App relative min-h-screen">
-        {displayPopup.toDisplay && (
-          <Popup message={displayPopup.message} popupType={displayPopup.popupType} />
-        )}
-        <ModalContext.Provider value={toDisplayModal}>
-          <Modal
-            className={`transition-all ${displayModal.toDisplay ? "scale-100" : "scale-0"}`}
-            modalType={displayModal.modalType}
-            payload={displayModal.payload}
-          />
-        </ModalContext.Provider>
-        <Navbar />
-        <Routes>
-          <Route path={AppRoutes.LANDING_PAGE} element={<Landing />} />
-        </Routes>
-      </div>
-    </PopupContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <PopupContext.Provider value={setPopupDisplay}>
+        <div className="App relative min-h-screen">
+          {displayPopup.toDisplay && (
+            <Popup message={displayPopup.message} popupType={displayPopup.popupType} />
+          )}
+          <ModalContext.Provider value={toDisplayModal}>
+            <Modal
+              className={`transition-all ${displayModal.toDisplay ? "scale-100" : "scale-0"}`}
+              modalType={displayModal.modalType}
+              payload={displayModal.payload}
+            />
+          </ModalContext.Provider>
+          <Navbar />
+          <Routes>
+            <Route path={AppRoutes.LANDING_PAGE} element={<Landing />} />
+          </Routes>
+        </div>
+      </PopupContext.Provider>
+    </QueryClientProvider>
   );
 }
 

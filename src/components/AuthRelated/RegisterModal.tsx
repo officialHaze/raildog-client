@@ -5,6 +5,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import RegisterForm from "./RegisterForm";
 import RegistrationData from "../../interfaces/RegistrationData";
 import { useRegistrationLabel } from "../../utils/customHooks";
+import VerifyEmail from "./VerifyEmail";
 
 export default function RegisterModal() {
   const toDisplayModal = useContext(ModalContext);
@@ -17,6 +18,7 @@ export default function RegisterModal() {
     role: "",
   });
   const [label, setLabel, resetLabel] = useRegistrationLabel();
+  const [isRegistrationComplete, setIsRegistrationComplete] = useState(false);
 
   const reset = () => {
     setRegisterData({
@@ -27,8 +29,8 @@ export default function RegisterModal() {
       confirmPassword: "",
       role: "",
     });
-
     resetLabel();
+    setIsRegistrationComplete(false);
   };
 
   const close = () => {
@@ -49,15 +51,20 @@ export default function RegisterModal() {
       </div>
 
       <div className="heading text-center py-4">
-        <h2>Create an account</h2>
+        <h2>{!isRegistrationComplete ? "Create an account" : "Verify your email"}</h2>
       </div>
 
-      <RegisterForm
-        labelPos={label}
-        setLabelPos={setLabel}
-        registerData={registerData}
-        setRegisterData={setRegisterData}
-      />
+      {!isRegistrationComplete ? (
+        <RegisterForm
+          labelPos={label}
+          setLabelPos={setLabel}
+          registerData={registerData}
+          setRegisterData={setRegisterData}
+          isRegistrationComplete={setIsRegistrationComplete}
+        />
+      ) : (
+        <VerifyEmail email={registerData.email} />
+      )}
     </div>
   );
 }

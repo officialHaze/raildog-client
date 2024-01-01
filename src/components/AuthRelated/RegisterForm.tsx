@@ -8,15 +8,17 @@ import PasswordInput from "../InputRelated/PasswordInput";
 import RoleSelector from "../InputRelated/RoleSelector";
 import SubmitBtn from "../InputRelated/SubmitBtn";
 import Mappings from "../../classes/Mappings";
-import Validator from "../../classes/Validator";
 import Handler from "../../classes/Handler";
 import { PopupContext } from "../../App";
+import { useLoader } from "../../utils/customHooks";
+import Loader from "../Loader/Loader";
 
 interface Props {
   registerData: RegistrationData;
   setRegisterData: React.Dispatch<React.SetStateAction<RegistrationData>>;
   labelPos: RegistrationData;
   setLabelPos: React.Dispatch<React.SetStateAction<RegistrationData>>;
+  isRegistrationComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function RegisterForm({
@@ -24,8 +26,11 @@ export default function RegisterForm({
   setRegisterData,
   labelPos,
   setLabelPos,
+  isRegistrationComplete,
 }: Props) {
   const setPopupDisplay = useContext(PopupContext);
+  const { startLoader, endLoader, isRunning: isLoaderRunning } = useLoader();
+
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
     const handleFocusin = (e: any) => {
@@ -58,32 +63,30 @@ export default function RegisterForm({
     id && Mappings.inputChangeMap[id](setRegisterData, registerData, value);
   };
 
-  const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
+  const startRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Validate the registration data
-    Promise.resolve()
-      .then(() => {
-        Validator.validateRegistrationData(registerData);
-        console.log("REGISTRATION DATA: ", registerData);
-      })
-      .catch(err => Handler.handleError(err, setPopupDisplay));
+    const handler = new Handler(startLoader, endLoader, setPopupDisplay);
+    await handler.handleRegistration(registerData, isRegistrationComplete);
   };
 
   return (
-    <form className="px-4 py-4 flex flex-col gap-6" onSubmit={handleRegistration}>
+    <form className="px-4 py-4 flex flex-col gap-6" onSubmit={startRegistration}>
       <EmailInput onChange={handleChange} value={registerData.email} labelPos={labelPos} />
       <UsernameInput onChange={handleChange} value={registerData.username} labelPos={labelPos} />
       <PhoneInput onChange={handleChange} value={registerData.phone} labelPos={labelPos} />
       <PasswordInput onChange={handleChange} value={registerData.password} labelPos={labelPos} />
       <PasswordInput
         onChange={handleChange}
-        value={registerData.confirmPassword}
+        value={registerData.confirmPassword ?? ""}
         labelPos={labelPos}
         inputName="Confirm Password*"
         id={InputTypes.CONFIRM_PASSWORD_INPUT}
       />
       <RoleSelector value={registerData.role} onChange={handleChange} />
-      <SubmitBtn btnDisplayText="Register" />
+      <SubmitBtn
+        isDisabled={isLoaderRunning}
+        btnDisplayText={isLoaderRunning ? <Loader /> : "Register"}
+      />
 
       <div className="text-center text-lg">
         Already have an account?{" "}

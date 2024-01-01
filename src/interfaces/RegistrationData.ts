@@ -3,6 +3,6 @@ export default interface RegistrationData {
   username: string;
   phone: number | string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
   role: string;
 }
