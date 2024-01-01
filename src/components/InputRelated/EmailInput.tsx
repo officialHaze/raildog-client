@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { InputTypes } from "../../classes/Constants";
 import RegistrationData from "../../interfaces/RegistrationData";
 
@@ -8,15 +8,15 @@ export interface AuthInputProps {
   value: string | number;
   inputName?: string;
   id?: string;
-  ref_: React.MutableRefObject<HTMLInputElement | null>;
 }
 
-export default function EmailInput({ labelPos, onChange, value, ref_ }: AuthInputProps) {
+export default function EmailInput({ labelPos, onChange, value }: AuthInputProps) {
+  const ref = useRef<HTMLInputElement | null>(null);
   return (
     <div className="relative email flex items-center">
-      <input id={InputTypes.EMAIL} type="email" onChange={onChange} value={value} ref={ref_} />
+      <input id={InputTypes.EMAIL} type="email" onChange={onChange} value={value} ref={ref} />
       <div
-        onClick={() => ref_?.current?.focus()}
+        onClick={() => ref?.current?.focus()}
         className={`absolute left-2 bg-[#191919] px-2 transition ${labelPos.email}`}
       >
         Email*

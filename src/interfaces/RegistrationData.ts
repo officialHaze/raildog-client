@@ -4,4 +4,5 @@ export default interface RegistrationData {
   phone: number | string;
   password: string;
   confirmPassword: string;
+  role: string;
 }

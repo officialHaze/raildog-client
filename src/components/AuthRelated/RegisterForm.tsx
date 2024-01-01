@@ -5,17 +5,14 @@ import EmailInput from "../InputRelated/EmailInput";
 import UsernameInput from "../InputRelated/UsernameInput";
 import PhoneInput from "../InputRelated/PhoneInput";
 import PasswordInput from "../InputRelated/PasswordInput";
+import RoleSelector from "../InputRelated/RoleSelector";
+import SubmitBtn from "../InputRelated/SubmitBtn";
 
 interface Props {
   registerData: RegistrationData;
   setRegisterData: React.Dispatch<React.SetStateAction<RegistrationData>>;
   labelPos: RegistrationData;
   setLabelPos: React.Dispatch<React.SetStateAction<RegistrationData>>;
-  emailInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  usernameInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  phoneInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  passwordInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  confirmPassInputRef: React.MutableRefObject<HTMLInputElement | null>;
 }
 
 export default function RegisterForm({
@@ -23,17 +20,12 @@ export default function RegisterForm({
   setRegisterData,
   labelPos,
   setLabelPos,
-  emailInputRef,
-  usernameInputRef,
-  phoneInputRef,
-  passwordInputRef,
-  confirmPassInputRef,
 }: Props) {
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
     const handleFocusin = (e: any) => {
       const id = e.target.id;
-      console.log("Focused in: ", id);
+      // console.log("Focused in: ", id);
 
       switch (id) {
         case InputTypes.EMAIL:
@@ -85,8 +77,7 @@ export default function RegisterForm({
   useEffect(() => {
     const handleFocusout = (e: any) => {
       const id = e.target.id;
-      console.log("Focused out: ", id);
-      console.log(registerData.email);
+      // console.log("Focused out: ", id);
 
       switch (id) {
         case InputTypes.EMAIL:
@@ -180,45 +171,52 @@ export default function RegisterForm({
         });
         break;
 
+      case InputTypes.INDIVIDUAL_ROLE:
+        setRegisterData({
+          ...registerData,
+          role: "individual",
+        });
+        break;
+
+      case InputTypes.DEVELOPER_ROLE:
+        setRegisterData({
+          ...registerData,
+          role: "developer",
+        });
+        break;
+
+      case InputTypes.BUSINESS_ROLE:
+        setRegisterData({
+          ...registerData,
+          role: "business",
+        });
+        break;
+
       default:
         break;
     }
   };
 
+  const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("REGISTRATION DATA: ", registerData);
+  };
+
   return (
-    <form className="px-4 py-4 flex flex-col gap-6">
-      <EmailInput
-        ref_={emailInputRef}
-        onChange={handleChange}
-        value={registerData.email}
-        labelPos={labelPos}
-      />
-      <UsernameInput
-        ref_={usernameInputRef}
-        onChange={handleChange}
-        value={registerData.username}
-        labelPos={labelPos}
-      />
-      <PhoneInput
-        ref_={phoneInputRef}
-        onChange={handleChange}
-        value={registerData.phone}
-        labelPos={labelPos}
-      />
+    <form className="px-4 py-4 flex flex-col gap-6" onSubmit={handleRegistration}>
+      <EmailInput onChange={handleChange} value={registerData.email} labelPos={labelPos} />
+      <UsernameInput onChange={handleChange} value={registerData.username} labelPos={labelPos} />
+      <PhoneInput onChange={handleChange} value={registerData.phone} labelPos={labelPos} />
+      <PasswordInput onChange={handleChange} value={registerData.password} labelPos={labelPos} />
       <PasswordInput
-        ref_={passwordInputRef}
-        onChange={handleChange}
-        value={registerData.password}
-        labelPos={labelPos}
-      />
-      <PasswordInput
-        ref_={confirmPassInputRef}
         onChange={handleChange}
         value={registerData.confirmPassword}
         labelPos={labelPos}
         inputName="Confirm Password*"
         id={InputTypes.CONFIRM_PASSWORD}
       />
+      <RoleSelector value={registerData.role} onChange={handleChange} />
+      <SubmitBtn btnDisplayText="Register" />
     </form>
   );
 }

@@ -13,4 +13,7 @@ export class InputTypes {
   public static PHONE = "PHONE";
   public static PASSWORD = "PASSWORD";
   public static CONFIRM_PASSWORD = "CONFIRM_PASSWORD";
+  public static INDIVIDUAL_ROLE = "INDIVIDUAL_ROLE";
+  public static DEVELOPER_ROLE = "DEVELOPER_ROLE";
+  public static BUSINESS_ROLE = "BUSINESS_ROLE";
 }

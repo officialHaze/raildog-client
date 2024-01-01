@@ -26,6 +26,10 @@
   input {
     @apply focus:outline-blue-500 outline outline-1 outline-slate-400 w-full px-4 py-2 rounded-lg bg-[#191919];
   }
+
+  input[type="radio"] {
+    @apply outline-none focus:outline-none bg-[#191919];
+  }
 }
 
 * {

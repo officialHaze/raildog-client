@@ -1,9 +1,10 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { ModalContext } from "../../App";
 import { ModalTypes } from "../../classes/Constants";
 import { IoCloseCircle } from "react-icons/io5";
 import RegisterForm from "./RegisterForm";
 import RegistrationData from "../../interfaces/RegistrationData";
+import { useRegistrationLabel } from "../../utils/customHooks";
 
 export default function RegisterModal() {
   const toDisplayModal = useContext(ModalContext);
@@ -13,19 +14,9 @@ export default function RegisterModal() {
     phone: 0,
     password: "",
     confirmPassword: "",
+    role: "",
   });
-  const [labelPos, setLabelPos] = useState<RegistrationData>({
-    email: "",
-    username: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const emailInputRef = useRef<HTMLInputElement | null>(null);
-  const usernameInputRef = useRef<HTMLInputElement | null>(null);
-  const phoneInputRef = useRef<HTMLInputElement | null>(null);
-  const passwordInputRef = useRef<HTMLInputElement | null>(null);
-  const confirmPasswordInputRef = useRef<HTMLInputElement | null>(null);
+  const [label, setLabel, resetLabel] = useRegistrationLabel();
 
   const reset = () => {
     setRegisterData({
@@ -34,15 +25,10 @@ export default function RegisterModal() {
       phone: 0,
       password: "",
       confirmPassword: "",
+      role: "",
     });
 
-    setLabelPos({
-      email: "",
-      username: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    });
+    resetLabel();
   };
 
   const close = () => {
@@ -67,15 +53,10 @@ export default function RegisterModal() {
       </div>
 
       <RegisterForm
-        labelPos={labelPos}
-        setLabelPos={setLabelPos}
+        labelPos={label}
+        setLabelPos={setLabel}
         registerData={registerData}
         setRegisterData={setRegisterData}
-        emailInputRef={emailInputRef}
-        usernameInputRef={usernameInputRef}
-        phoneInputRef={phoneInputRef}
-        passwordInputRef={passwordInputRef}
-        confirmPassInputRef={confirmPasswordInputRef}
       />
     </div>
   );
