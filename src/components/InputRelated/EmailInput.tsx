@@ -14,7 +14,7 @@ export default function EmailInput({ labelPos, onChange, value }: AuthInputProps
   const ref = useRef<HTMLInputElement | null>(null);
   return (
     <div className="relative email flex items-center">
-      <input id={InputTypes.EMAIL} type="email" onChange={onChange} value={value} ref={ref} />
+      <input id={InputTypes.EMAIL_INPUT} type="email" onChange={onChange} value={value} ref={ref} />
       <div
         onClick={() => ref?.current?.focus()}
         className={`absolute left-2 bg-[#191919] px-2 transition ${labelPos.email}`}

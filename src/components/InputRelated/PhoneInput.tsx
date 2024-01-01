@@ -9,7 +9,7 @@ export default function PhoneInput({ labelPos, onChange, value }: AuthInputProps
       <input
         onChange={onChange}
         value={!value ? "" : value}
-        id={InputTypes.PHONE}
+        id={InputTypes.PHONE_INPUT}
         type="text"
         ref={ref_}
       />

@@ -7,6 +7,7 @@ import PhoneInput from "../InputRelated/PhoneInput";
 import PasswordInput from "../InputRelated/PasswordInput";
 import RoleSelector from "../InputRelated/RoleSelector";
 import SubmitBtn from "../InputRelated/SubmitBtn";
+import Mappings from "../../classes/Mappings";
 
 interface Props {
   registerData: RegistrationData;
@@ -26,46 +27,7 @@ export default function RegisterForm({
     const handleFocusin = (e: any) => {
       const id = e.target.id;
       // console.log("Focused in: ", id);
-
-      switch (id) {
-        case InputTypes.EMAIL:
-          setLabelPos({
-            ...labelPos,
-            email: "-translate-y-[1.45rem] text-sm text-blue-500",
-          });
-          break;
-
-        case InputTypes.USERNAME:
-          setLabelPos({
-            ...labelPos,
-            username: "-translate-y-[1.45rem] text-sm text-blue-500",
-          });
-          break;
-
-        case InputTypes.PHONE:
-          setLabelPos({
-            ...labelPos,
-            phone: "-translate-y-[1.45rem] text-sm text-blue-500",
-          });
-          break;
-
-        case InputTypes.PASSWORD:
-          setLabelPos({
-            ...labelPos,
-            password: "-translate-y-[1.45rem] text-sm text-blue-500",
-          });
-          break;
-
-        case InputTypes.CONFIRM_PASSWORD:
-          setLabelPos({
-            ...labelPos,
-            confirmPassword: "-translate-y-[1.45rem] text-sm text-blue-500",
-          });
-          break;
-
-        default:
-          break;
-      }
+      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos);
     };
     document.addEventListener("focusin", handleFocusin);
     return () => {
@@ -78,51 +40,7 @@ export default function RegisterForm({
     const handleFocusout = (e: any) => {
       const id = e.target.id;
       // console.log("Focused out: ", id);
-
-      switch (id) {
-        case InputTypes.EMAIL:
-          !registerData.email &&
-            setLabelPos({
-              ...labelPos,
-              email: "",
-            });
-          break;
-
-        case InputTypes.USERNAME:
-          !registerData.username &&
-            setLabelPos({
-              ...labelPos,
-              username: "",
-            });
-          break;
-
-        case InputTypes.PHONE:
-          !registerData.phone &&
-            setLabelPos({
-              ...labelPos,
-              phone: "",
-            });
-          break;
-
-        case InputTypes.PASSWORD:
-          !registerData.password &&
-            setLabelPos({
-              ...labelPos,
-              password: "",
-            });
-          break;
-
-        case InputTypes.CONFIRM_PASSWORD:
-          !registerData.confirmPassword &&
-            setLabelPos({
-              ...labelPos,
-              confirmPassword: "",
-            });
-          break;
-
-        default:
-          break;
-      }
+      id && id.includes("INPUT") && Mappings.focusOutMap[id](labelPos, setLabelPos, registerData);
     };
     document.addEventListener("focusout", handleFocusout);
     return () => {
@@ -133,68 +51,7 @@ export default function RegisterForm({
   // Handle change in input values
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.currentTarget;
-
-    switch (id) {
-      case InputTypes.EMAIL:
-        setRegisterData({
-          ...registerData,
-          email: value,
-        });
-        break;
-
-      case InputTypes.USERNAME:
-        setRegisterData({
-          ...registerData,
-          username: value,
-        });
-        break;
-
-      case InputTypes.PHONE:
-        value.length <= 10 &&
-          setRegisterData({
-            ...registerData,
-            phone: parseInt(value),
-          });
-        break;
-
-      case InputTypes.PASSWORD:
-        setRegisterData({
-          ...registerData,
-          password: value,
-        });
-        break;
-
-      case InputTypes.CONFIRM_PASSWORD:
-        setRegisterData({
-          ...registerData,
-          confirmPassword: value,
-        });
-        break;
-
-      case InputTypes.INDIVIDUAL_ROLE:
-        setRegisterData({
-          ...registerData,
-          role: "individual",
-        });
-        break;
-
-      case InputTypes.DEVELOPER_ROLE:
-        setRegisterData({
-          ...registerData,
-          role: "developer",
-        });
-        break;
-
-      case InputTypes.BUSINESS_ROLE:
-        setRegisterData({
-          ...registerData,
-          role: "business",
-        });
-        break;
-
-      default:
-        break;
-    }
+    id && Mappings.inputChangeMap[id](setRegisterData, registerData, value);
   };
 
   const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
@@ -213,7 +70,7 @@ export default function RegisterForm({
         value={registerData.confirmPassword}
         labelPos={labelPos}
         inputName="Confirm Password*"
-        id={InputTypes.CONFIRM_PASSWORD}
+        id={InputTypes.CONFIRM_PASSWORD_INPUT}
       />
       <RoleSelector value={registerData.role} onChange={handleChange} />
       <SubmitBtn btnDisplayText="Register" />

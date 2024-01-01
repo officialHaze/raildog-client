@@ -15,14 +15,14 @@ export default function PasswordInput({
       <input
         onChange={onChange}
         value={value}
-        id={!id ? InputTypes.PASSWORD : id}
+        id={!id ? InputTypes.PASSWORD_INPUT : id}
         type="password"
         ref={ref_}
       />
       <div
         onClick={() => ref_?.current?.focus()}
         className={`absolute left-2 bg-[#191919] px-2 transition ${
-          id !== InputTypes.CONFIRM_PASSWORD ? labelPos.password : labelPos.confirmPassword
+          id !== InputTypes.CONFIRM_PASSWORD_INPUT ? labelPos.password : labelPos.confirmPassword
         }`}
       >
         {!inputName ? "Password*" : inputName}
