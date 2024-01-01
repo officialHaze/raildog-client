@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import RegistrationData from "../interfaces/RegistrationData";
 import LoginData from "../interfaces/LoginData";
 
@@ -48,4 +48,43 @@ export const useLoginLabel = (): [
   };
 
   return [labelPos, setLabelPos, reset];
+};
+
+export const usePopup = (): [
+  displayPopup: { toDisplay: boolean; message: string; popupType: string },
+  setPopupDisplay: React.Dispatch<
+    React.SetStateAction<{
+      toDisplay: boolean;
+      message: string;
+      popupType: string;
+    }>
+  >
+] => {
+  const [displayPopup, setPopupDisplay] = useState({
+    toDisplay: false,
+    message: "",
+    popupType: "",
+  });
+
+  useMemo(() => {
+    if (displayPopup.toDisplay) {
+      setTimeout(() => {
+        setPopupDisplay({
+          toDisplay: false,
+          message: "",
+          popupType: "",
+        });
+      }, 5000);
+    }
+
+    // return () => {
+    //   setPopupDisplay({
+    //     toDisplay: false,
+    //     message: "",
+    //     popupType: "",
+    //   });
+    // };
+  }, [displayPopup.toDisplay]);
+
+  return [displayPopup, setPopupDisplay];
 };

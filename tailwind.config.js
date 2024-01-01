@@ -6,6 +6,9 @@ module.exports = {
       colors: {
         "raildog-blue": "#1640D6",
       },
+      boxShadow: {
+        "all-4": "2px 2px 15px 1px",
+      },
     },
   },
   plugins: [],

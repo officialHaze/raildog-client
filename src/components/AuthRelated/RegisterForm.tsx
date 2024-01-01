@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { InputTypes } from "../../classes/Constants";
+import { useContext, useEffect } from "react";
+import Constants, { InputTypes } from "../../classes/Constants";
 import RegistrationData from "../../interfaces/RegistrationData";
 import EmailInput from "../InputRelated/EmailInput";
 import UsernameInput from "../InputRelated/UsernameInput";
@@ -8,6 +8,9 @@ import PasswordInput from "../InputRelated/PasswordInput";
 import RoleSelector from "../InputRelated/RoleSelector";
 import SubmitBtn from "../InputRelated/SubmitBtn";
 import Mappings from "../../classes/Mappings";
+import Validator from "../../classes/Validator";
+import Handler from "../../classes/Handler";
+import { PopupContext } from "../../App";
 
 interface Props {
   registerData: RegistrationData;
@@ -22,6 +25,7 @@ export default function RegisterForm({
   labelPos,
   setLabelPos,
 }: Props) {
+  const setPopupDisplay = useContext(PopupContext);
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
     const handleFocusin = (e: any) => {
@@ -54,9 +58,15 @@ export default function RegisterForm({
     id && Mappings.inputChangeMap[id](setRegisterData, registerData, value);
   };
 
-  const handleRegistration = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("REGISTRATION DATA: ", registerData);
+    // Validate the registration data
+    Promise.resolve()
+      .then(() => {
+        Validator.validateRegistrationData(registerData);
+        console.log("REGISTRATION DATA: ", registerData);
+      })
+      .catch(err => Handler.handleError(err, setPopupDisplay));
   };
 
   return (
@@ -74,6 +84,13 @@ export default function RegisterForm({
       />
       <RoleSelector value={registerData.role} onChange={handleChange} />
       <SubmitBtn btnDisplayText="Register" />
+
+      <div className="text-center text-lg">
+        Already have an account?{" "}
+        <span id={Constants.LOGIN_BTN} className="cursor-pointer text-raildog-blue">
+          Login
+        </span>
+      </div>
     </form>
   );
 }

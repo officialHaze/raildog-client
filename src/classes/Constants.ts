@@ -1,10 +1,12 @@
 export default class Constants {
   public static REGISTER_BTN = "REGISTER_BTN";
+  public static LOGIN_BTN = "LOGIN_BTN";
   public static MODAL = "MODAL";
 }
 
 export class ModalTypes extends Constants {
   public static REGISTER_MODAL = "REGISTER_MODAL";
+  public static LOGIN_MODAL = "LOGIN_MODAL";
 }
 
 export class InputTypes {
@@ -16,4 +18,9 @@ export class InputTypes {
   public static INDIVIDUAL_ROLE = "INDIVIDUAL_ROLE";
   public static DEVELOPER_ROLE = "DEVELOPER_ROLE";
   public static BUSINESS_ROLE = "BUSINESS_ROLE";
+}
+
+export class PopupTypes {
+  public static ERROR_POPUP = "ERROR_POPUP";
+  public static SUCCESS_POPUP = "SUCCESS_POPUP";
 }
