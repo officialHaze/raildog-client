@@ -1,6 +1,8 @@
 import { AuthInputProps } from "./EmailInput";
 import { InputTypes } from "../../classes/Constants";
 import { useRef } from "react";
+import { FaUserAstronaut } from "react-icons/fa6";
+import Label from "./Label";
 
 export default function UsernameInput({ labelPos, onChange, value }: AuthInputProps) {
   const ref_ = useRef<HTMLInputElement | null>(null);
@@ -13,12 +15,8 @@ export default function UsernameInput({ labelPos, onChange, value }: AuthInputPr
         type="text"
         ref={ref_}
       />
-      <div
-        onClick={() => ref_?.current?.focus()}
-        className={`absolute left-2 bg-[#191919] px-2 transition ${labelPos.username}`}
-      >
-        Username*
-      </div>
+      <Label children="Username*" ref_={ref_} className={`${labelPos.username}`} />
+      <FaUserAstronaut className="input-icon" />
     </div>
   );
 }

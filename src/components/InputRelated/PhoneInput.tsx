@@ -1,6 +1,8 @@
 import { AuthInputProps } from "./EmailInput";
 import { InputTypes } from "../../classes/Constants";
 import { useRef } from "react";
+import { BsFillTelephoneFill } from "react-icons/bs";
+import Label from "./Label";
 
 export default function PhoneInput({ labelPos, onChange, value }: AuthInputProps) {
   const ref_ = useRef<HTMLInputElement | null>(null);
@@ -13,12 +15,8 @@ export default function PhoneInput({ labelPos, onChange, value }: AuthInputProps
         type="text"
         ref={ref_}
       />
-      <div
-        onClick={() => ref_?.current?.focus()}
-        className={`absolute left-2 bg-[#191919] px-2 transition ${labelPos.phone}`}
-      >
-        Phone no.*
-      </div>
+      <Label children="Phone no.*" className={`${labelPos.phone}`} ref_={ref_} />
+      <BsFillTelephoneFill className="input-icon text-lg" />
     </div>
   );
 }
