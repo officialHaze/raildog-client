@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Constants, { InputTypes } from "../../classes/Constants";
 import RegistrationData from "../../interfaces/RegistrationData";
 import EmailInput from "../InputRelated/EmailInput";
@@ -30,19 +30,83 @@ export default function RegisterForm({
 }: Props) {
   const setPopupDisplay = useContext(PopupContext);
   const { startLoader, endLoader, isRunning: isLoaderRunning } = useLoader();
+  const [indicator, setIndicator] = useState({
+    email: {
+      toDisplay: false,
+      errorCode: "",
+    },
+
+    username: {
+      toDisplay: false,
+      errorCode: "",
+    },
+
+    phone: {
+      toDisplay: false,
+      errorCode: "",
+    },
+
+    password: {
+      toDisplay: false,
+      errorCode: "",
+    },
+
+    confirmPassword: {
+      toDisplay: false,
+      errorCode: "",
+    },
+
+    role: {
+      toDisplay: false,
+      errorCode: "",
+    },
+  });
 
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
     const handleFocusin = (e: any) => {
+      // Remove any preloaded error indicator
+      setIndicator({
+        email: {
+          toDisplay: false,
+          errorCode: "",
+        },
+
+        username: {
+          toDisplay: false,
+          errorCode: "",
+        },
+
+        phone: {
+          toDisplay: false,
+          errorCode: "",
+        },
+
+        password: {
+          toDisplay: false,
+          errorCode: "",
+        },
+
+        confirmPassword: {
+          toDisplay: false,
+          errorCode: "",
+        },
+
+        role: {
+          toDisplay: false,
+          errorCode: "",
+        },
+      });
+
       const id = e.target.id;
       // console.log("Focused in: ", id);
-      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos);
+      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos, indicator);
     };
     document.addEventListener("focusin", handleFocusin);
     return () => {
       document.removeEventListener("focusin", handleFocusin);
     };
-  }, [labelPos, setLabelPos]);
+  }, [labelPos, setLabelPos, indicator]);
 
   // Monitor and handle focus out in any of the input fields
   useEffect(() => {
@@ -65,24 +129,45 @@ export default function RegisterForm({
 
   const startRegistration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const handler = new Handler(startLoader, endLoader, setPopupDisplay);
+    const handler = new Handler(startLoader, endLoader, setPopupDisplay, setIndicator);
     await handler.handleRegistration(registerData, isRegistrationComplete);
   };
 
   return (
     <form className="px-4 py-4 flex flex-col gap-6" onSubmit={startRegistration}>
-      <EmailInput onChange={handleChange} value={registerData.email} labelPos={labelPos} />
-      <UsernameInput onChange={handleChange} value={registerData.username} labelPos={labelPos} />
-      <PhoneInput onChange={handleChange} value={registerData.phone} labelPos={labelPos} />
-      <PasswordInput onChange={handleChange} value={registerData.password} labelPos={labelPos} />
+      <EmailInput
+        onChange={handleChange}
+        value={registerData.email}
+        labelPos={labelPos}
+        indicator={indicator.email}
+      />
+      <UsernameInput
+        onChange={handleChange}
+        value={registerData.username}
+        labelPos={labelPos}
+        indicator={indicator.username}
+      />
+      <PhoneInput
+        onChange={handleChange}
+        value={registerData.phone}
+        labelPos={labelPos}
+        indicator={indicator.phone}
+      />
+      <PasswordInput
+        onChange={handleChange}
+        value={registerData.password}
+        labelPos={labelPos}
+        indicator={indicator.password}
+      />
       <PasswordInput
         onChange={handleChange}
         value={registerData.confirmPassword ?? ""}
         labelPos={labelPos}
         inputName="Confirm Password*"
         id={InputTypes.CONFIRM_PASSWORD_INPUT}
+        indicator={indicator.confirmPassword}
       />
-      <RoleSelector value={registerData.role} onChange={handleChange} />
+      <RoleSelector value={registerData.role} onChange={handleChange} indicator={indicator.role} />
       <SubmitBtn
         isDisabled={isLoaderRunning}
         btnDisplayText={isLoaderRunning ? <Loader /> : "Register"}

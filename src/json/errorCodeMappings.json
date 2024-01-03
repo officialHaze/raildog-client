@@ -1,5 +1,5 @@
 {
-    "allFieldsInvalid": "A01",
+    "fieldsInvalid": "A01",
     "invalidEmail": "E01",
     "invalidUsername": "U01",
     "invalidPhone": "P01",

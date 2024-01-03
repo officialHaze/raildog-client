@@ -24,3 +24,30 @@ export class PopupTypes {
   public static ERROR_POPUP = "ERROR_POPUP";
   public static SUCCESS_POPUP = "SUCCESS_POPUP";
 }
+
+export class ErrorTexts {
+  public static INVALID_EMAIL: any = {
+    A01: "A valid email address is required!",
+  };
+
+  public static INVALID_USERNAME: any = {
+    A01: "A valid username is required!",
+  };
+
+  public static INVALID_PHONE: any = {
+    A01: "A valid and unique phone number is required!",
+  };
+
+  public static INVALID_PASSWORD: any = {
+    A01: "A strong and valid password is required!",
+  };
+
+  public static INVALID_CONFIRM_PASSWORD: any = {
+    A01: "This field is mandatory!",
+    PCP01: "Passwords don't match!",
+  };
+
+  public static INVALID_ROLE: any = {
+    A01: "Please select a role!",
+  };
+}

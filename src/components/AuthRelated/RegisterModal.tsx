@@ -45,7 +45,7 @@ export default function RegisterModal() {
   };
 
   return (
-    <div className="relative transition-all rounded-xl overflow-hidden w-full h-full bg-[#191919] text-white">
+    <div className="relative transition-all rounded-xl overflow-auto w-full h-full bg-[#191919] text-white">
       <div onClick={close} className="absolute right-2 top-1">
         <IoCloseCircle className="text-3xl cursor-pointer" />
       </div>
