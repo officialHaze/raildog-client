@@ -168,16 +168,18 @@ export default function RegisterForm({
         indicator={indicator.confirmPassword}
       />
       <RoleSelector value={registerData.role} onChange={handleChange} indicator={indicator.role} />
-      <SubmitBtn
-        isDisabled={isLoaderRunning}
-        btnDisplayText={isLoaderRunning ? <Loader /> : "Register"}
-      />
+      <div>
+        <SubmitBtn
+          isDisabled={isLoaderRunning}
+          btnDisplayText={isLoaderRunning ? <Loader /> : "Register"}
+        />
 
-      <div className="text-center text-lg">
-        Already have an account?{" "}
-        <span id={Constants.LOGIN_BTN} className="cursor-pointer text-raildog-blue">
-          Login
-        </span>
+        <div className="text-center text-lg">
+          Already have an account?{" "}
+          <span id={Constants.LOGIN_BTN} className="cursor-pointer text-raildog-blue">
+            Login
+          </span>
+        </div>
       </div>
     </form>
   );
