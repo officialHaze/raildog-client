@@ -15,8 +15,20 @@
     @apply text-3xl font-bold;
   }
 
+  h2 {
+    @apply text-2xl font-bold;
+  }
+
   button {
     @apply text-lg;
+  }
+
+  input {
+    @apply focus:outline-blue-500 outline outline-1 outline-slate-400 w-full px-4 py-2 rounded-lg bg-[#191919];
+  }
+
+  input[type="radio"] {
+    @apply outline-none focus:outline-none bg-[#191919];
   }
 }
 
@@ -36,5 +48,39 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: $black;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-moz-autofill {
+  -moz-text-fill-color: $black;
+  -moz-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-o-autofill {
+  -o-text-fill-color: $black;
+  -o-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-khtml-autofill {
+  -khtml-text-fill-color: $black;
+  -khtml-box-shadow: 0 0 0px 1000px white inset;
+}
+
+input:focus:-webkit-autofill {
+  -webkit-text-fill-color: $black;
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-moz-autofill {
+  -moz-text-fill-color: $black;
+  -moz-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-o-autofill {
+  -o-text-fill-color: $black;
+  -o-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-khtml-autofill {
+  -khtml-text-fill-color: $black;
+  -khtml-box-shadow: 0 0 0px 1000px white inset;
 }
 

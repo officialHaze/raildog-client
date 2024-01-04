@@ -1,0 +1,9 @@
+{
+    "allFieldsInvalid": "A01",
+    "invalidEmail": "E01",
+    "invalidUsername": "U01",
+    "invalidPhone": "P01",
+    "invalidPass": "P02",
+    "passwordsDontMatch": "PCP01",
+    "invalidRole": "R01"
+}
