@@ -3,6 +3,7 @@ import { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
+import Hasher from "./Hasher";
 
 export default class Handler {
   public startLoader: () => void;
@@ -44,11 +45,16 @@ export default class Handler {
         this.startLoader();
 
         const { email, phone, username, password, role } = registerData;
+
+        // Hash the password
+        const hash = Hasher.hashPass(password);
+        console.log("Hashed pass: ", hash);
+
         const updatedData: RegistrationData = {
           email,
           phone,
           username,
-          password,
+          password: hash,
           role,
         };
         const res = await Fetcher.register(updatedData);
@@ -90,6 +96,12 @@ export default class Handler {
         default:
           break;
       }
-    }
+    } else
+      this.setPopup &&
+        this.setPopup({
+          toDisplay: true,
+          message: "Something went wrong!",
+          popupType: PopupTypes.ERROR_POPUP,
+        });
   }
 }
