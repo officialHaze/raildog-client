@@ -4,6 +4,7 @@ import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
 import Hasher from "./Hasher";
+import axiosInstance from "../utils/axiosConfig";
 
 export default class Handler {
   public startLoader: () => void;
@@ -15,7 +16,7 @@ export default class Handler {
       popupType: string;
     }>
   > | null;
-  setIndicator: React.Dispatch<React.SetStateAction<any>>;
+  setIndicator: React.Dispatch<React.SetStateAction<any>> | null | undefined;
 
   constructor(
     startLoader: () => void,
@@ -27,7 +28,7 @@ export default class Handler {
         popupType: string;
       }>
     > | null,
-    setIndicator: React.Dispatch<React.SetStateAction<any>>
+    setIndicator?: React.Dispatch<React.SetStateAction<any>>
   ) {
     this.startLoader = startLoader;
     this.endLoader = endLoader;
@@ -68,33 +69,47 @@ export default class Handler {
         isRegistrationComplete(true);
       })
       .catch(err => {
-        this.endLoader();
-        this.handleError(err);
+        this.handleError(err, () => this.endLoader());
       });
   }
 
-  public handleError(err: any) {
+  public async handleResendVerifyEmail(username: string) {
+    try {
+      this.startLoader();
+
+      const { data } = await axiosInstance.post("/send_verification_email", { username });
+      console.log("Response after calling resend verification email api: ", data);
+
+      this.endLoader();
+
+      this.setPopup &&
+        this.setPopup({
+          toDisplay: true,
+          message: "Verification link has been sent.",
+          popupType: PopupTypes.SUCCESS_POPUP,
+        });
+    } catch (error) {
+      this.handleError(error, () => this.endLoader());
+    }
+  }
+
+  public handleError(err: any, callback: () => void) {
     console.log(err);
 
     if (err.errorCode) {
       const invalidFields: string[] = err.payload;
       invalidFields.forEach((field: string) => {
-        this.setIndicator((prevState: any) => {
-          const newState = prevState;
-          newState[field] = {
-            toDisplay: true,
-            errorCode: err.errorCode,
-          };
-          return { ...newState };
-        });
+        this.setIndicator &&
+          this.setIndicator((prevState: any) => {
+            const newState = prevState;
+            newState[field] = {
+              toDisplay: true,
+              errorCode: err.errorCode,
+            };
+            return { ...newState };
+          });
       });
-
-      // this.setPopup &&
-      //   this.setPopup({
-      //     toDisplay: true,
-      //     message: err.message,
-      //     popupType: PopupTypes.ERROR_POPUP,
-      //   });
+      callback();
     } else if (err.response) {
       const errstatus = err.response.status;
       switch (errstatus) {
@@ -106,17 +121,20 @@ export default class Handler {
               message: errmsg,
               popupType: PopupTypes.ERROR_POPUP,
             });
+          callback();
           break;
 
         default:
           break;
       }
-    } else
+    } else {
       this.setPopup &&
         this.setPopup({
           toDisplay: true,
           message: "Something went wrong!",
           popupType: PopupTypes.ERROR_POPUP,
         });
+      callback();
+    }
   }
 }

@@ -113,7 +113,10 @@ export const useDisableTimer = (
   const [isDisabled, setIsDisabled] = useState(true);
   const [timer, setTimer] = useState(timerInSec);
 
-  const startDisableTimer = () => setTimer(timerInSec);
+  const startDisableTimer = () => {
+    setIsDisabled(true);
+    setTimer(timerInSec);
+  };
 
   useMemo(() => {
     if (timer > 0) {

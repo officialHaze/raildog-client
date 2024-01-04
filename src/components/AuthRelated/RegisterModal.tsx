@@ -66,7 +66,7 @@ export default function RegisterModal() {
             isRegistrationComplete={setIsRegistrationComplete}
           />
         ) : (
-          <VerifyEmail email={registerData.email} />
+          <VerifyEmail email={registerData.email} username={registerData.username} />
         )}
       </div>
     </div>
