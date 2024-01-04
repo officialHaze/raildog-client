@@ -15,6 +15,7 @@ export default class Handler {
       popupType: string;
     }>
   > | null;
+  setIndicator: React.Dispatch<React.SetStateAction<any>>;
 
   constructor(
     startLoader: () => void,
@@ -25,11 +26,13 @@ export default class Handler {
         message: string;
         popupType: string;
       }>
-    > | null
+    > | null,
+    setIndicator: React.Dispatch<React.SetStateAction<any>>
   ) {
     this.startLoader = startLoader;
     this.endLoader = endLoader;
     this.setPopup = setPopup;
+    this.setIndicator = setIndicator;
   }
 
   public async handleRegistration(
@@ -74,12 +77,24 @@ export default class Handler {
     console.log(err);
 
     if (err.errorCode) {
-      this.setPopup &&
-        this.setPopup({
-          toDisplay: true,
-          message: err.message,
-          popupType: PopupTypes.ERROR_POPUP,
+      const invalidFields: string[] = err.payload;
+      invalidFields.forEach((field: string) => {
+        this.setIndicator((prevState: any) => {
+          const newState = prevState;
+          newState[field] = {
+            toDisplay: true,
+            errorCode: err.errorCode,
+          };
+          return { ...newState };
         });
+      });
+
+      // this.setPopup &&
+      //   this.setPopup({
+      //     toDisplay: true,
+      //     message: err.message,
+      //     popupType: PopupTypes.ERROR_POPUP,
+      //   });
     } else if (err.response) {
       const errstatus = err.response.status;
       switch (errstatus) {

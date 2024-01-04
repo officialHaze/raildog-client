@@ -106,3 +106,27 @@ export const useLoader = (): {
 
   return { startLoader: start, endLoader: end, isRunning: startLoader };
 };
+
+export const useDisableTimer = (
+  timerInSec: number
+): { isDisabled: boolean; timer: number; startDisableTimer: () => void } => {
+  const [isDisabled, setIsDisabled] = useState(true);
+  const [timer, setTimer] = useState(timerInSec);
+
+  const startDisableTimer = () => setTimer(timerInSec);
+
+  useMemo(() => {
+    if (timer > 0) {
+      setTimeout(() => {
+        setTimer(timer - 1);
+      }, 1000);
+    } else if (timer <= 0) {
+      setIsDisabled(false);
+    }
+    // return () => {
+    //   setTimer(0);
+    // };
+  }, [timer]);
+
+  return { isDisabled, timer, startDisableTimer };
+};
