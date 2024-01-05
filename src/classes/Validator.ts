@@ -24,4 +24,21 @@ export default class Validator {
     }
     return;
   }
+
+  public static validateLoginData(data: any) {
+    const fieldsToValidate = ["username", "password"];
+    const invalidFields: string[] = [];
+
+    fieldsToValidate.forEach(field => {
+      const value = data[field];
+      if (!value) invalidFields.push(field);
+    });
+    if (invalidFields.length > 0)
+      throw {
+        errorCode: errCodeMap.fieldsInvalid,
+        payload: invalidFields,
+      };
+
+    return;
+  }
 }

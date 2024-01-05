@@ -5,7 +5,13 @@ import { FaUserAstronaut } from "react-icons/fa6";
 import Label from "./Label";
 import Indicator from "./Indicator";
 
-export default function UsernameInput({ labelPos, onChange, value, indicator }: AuthInputProps) {
+export default function UsernameInput({
+  labelPos,
+  onChange,
+  value,
+  indicator,
+  isLoginComponent,
+}: AuthInputProps) {
   const ref_ = useRef<HTMLInputElement | null>(null);
   return (
     <div>
@@ -17,9 +23,10 @@ export default function UsernameInput({ labelPos, onChange, value, indicator }: 
           type="text"
           ref={ref_}
           className={indicator.toDisplay ? "focus:outline-red-500 outline-red-500" : ""}
+          autoComplete={isLoginComponent ? "off" : "on"}
         />
         <Label
-          children="Username*"
+          children={!isLoginComponent ? "Username*" : "Username or email*"}
           ref_={ref_}
           className={`${labelPos.username} ${indicator.toDisplay && "text-red-500"}`}
         />

@@ -6,7 +6,7 @@ import { PopupContext } from "../../App";
 import Loader from "../Loader/Loader";
 
 interface Props {
-  email: string;
+  email?: string;
   username: string;
 }
 
@@ -33,7 +33,8 @@ export default function VerifyEmail({ email, username }: Props) {
       </div>
       <div>
         <p>
-          A verification link has been sent to <span className="font-bold">{email}</span>.
+          A verification link has been sent to{" "}
+          {email ? <span className="font-bold">{email}</span> : " your registered email id"}.
         </p>
         <p>Kindly verify your email to activate this account.</p>
       </div>

@@ -12,12 +12,13 @@ import Handler from "../../classes/Handler";
 import { PopupContext } from "../../App";
 import { useLoader } from "../../utils/customHooks";
 import Loader from "../Loader/Loader";
+import LabelData from "../../interfaces/LabelData";
 
 interface Props {
   registerData: RegistrationData;
   setRegisterData: React.Dispatch<React.SetStateAction<RegistrationData>>;
-  labelPos: RegistrationData;
-  setLabelPos: React.Dispatch<React.SetStateAction<RegistrationData>>;
+  labelPos: LabelData;
+  setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
   isRegistrationComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

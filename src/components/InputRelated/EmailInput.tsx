@@ -1,16 +1,17 @@
 import React, { useRef } from "react";
 import { ErrorTexts, InputTypes } from "../../classes/Constants";
-import RegistrationData from "../../interfaces/RegistrationData";
 import { MdEmail } from "react-icons/md";
 import Label from "./Label";
 import Indicator from "./Indicator";
+import LabelData from "../../interfaces/LabelData";
 
 export interface AuthInputProps {
-  labelPos: RegistrationData;
+  labelPos: LabelData;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: string | number;
   inputName?: string;
   id?: string;
+  isLoginComponent?: boolean;
   indicator: {
     toDisplay: boolean;
     errorCode: string;
