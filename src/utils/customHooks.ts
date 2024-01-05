@@ -1,19 +1,17 @@
 import { useMemo, useState } from "react";
-import RegistrationData from "../interfaces/RegistrationData";
-import LoginData from "../interfaces/LoginData";
+import LabelData from "../interfaces/LabelData";
 
 export const useRegistrationLabel = (): [
-  label: RegistrationData,
-  setLabel: React.Dispatch<React.SetStateAction<RegistrationData>>,
+  label: LabelData,
+  setLabel: React.Dispatch<React.SetStateAction<LabelData>>,
   reset: () => void
 ] => {
-  const [labelPos, setLabelPos] = useState<RegistrationData>({
+  const [labelPos, setLabelPos] = useState<LabelData>({
     email: "",
     username: "",
     phone: "",
     password: "",
     confirmPassword: "",
-    role: "",
   });
 
   const reset = () => {
@@ -23,7 +21,6 @@ export const useRegistrationLabel = (): [
       phone: "",
       password: "",
       confirmPassword: "",
-      role: "",
     });
   };
 
@@ -31,11 +28,11 @@ export const useRegistrationLabel = (): [
 };
 
 export const useLoginLabel = (): [
-  label: LoginData,
-  setLabel: React.Dispatch<React.SetStateAction<LoginData>>,
+  label: LabelData,
+  setLabel: React.Dispatch<React.SetStateAction<LabelData>>,
   reset: () => void
 ] => {
-  const [labelPos, setLabelPos] = useState<LoginData>({
+  const [labelPos, setLabelPos] = useState<LabelData>({
     username: "",
     password: "",
   });
