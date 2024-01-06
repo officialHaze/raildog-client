@@ -12,11 +12,11 @@ export const SideOptionSelectCtx = createContext<SideOptionSelectState | null>(n
 export default function Dashboard() {
   const [isSelected, setIsSelected] = useState(SidePanelOptionsId.API_KEYS); //By default the API keys option will be selected
   return (
-    <div className="flex gap-10 h-screen">
+    <div className="flex h-screen">
       <SideOptionSelectCtx.Provider value={{ isSelected, setIsSelected }}>
         <SidePanel />
       </SideOptionSelectCtx.Provider>
-      <div className="h-full w-full text-white">Dashboard cards</div>
+      <div className="h-full w-full text-white overflow-auto">Stats and info</div>
     </div>
   );
 }

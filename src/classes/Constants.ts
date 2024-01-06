@@ -57,4 +57,7 @@ export class ErrorTexts {
 export class SidePanelOptionsId {
   public static API_KEYS = "API_KEYS";
   public static RAILDOG_API = "RAILDOG_API";
+
+  // Sub options id
+  public static RAILDOG_SUB_SNIFF_TRAINS = "RAILDOG_SUB_SNIFF_TRAINS";
 }

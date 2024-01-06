@@ -20,7 +20,12 @@ export default function SidePanel() {
 
       <div className="bg-github-black-primary py-4 h-[75%] overflow-auto flex flex-col gap-4">
         {sidePanelOptions.map(option => (
-          <SidePanelOption key={option.id} optionName={option.name} id={option.id} />
+          <SidePanelOption
+            key={option.id}
+            optionName={option.name}
+            id={option.id}
+            suboptions={option.suboptions}
+          />
         ))}
       </div>
 
