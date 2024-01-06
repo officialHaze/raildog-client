@@ -2,7 +2,7 @@ import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppRoutes from "./classes/Routes";
 import Landing from "./pages/Landing";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import React, { createContext, useEffect, useState } from "react";
 import Constants, { ModalTypes } from "./classes/Constants";
 import Modal from "./components/Modal";
@@ -108,7 +108,7 @@ function App() {
                 payload={displayModal.payload}
               />
             </ModalContext.Provider>
-            <Navbar />
+            {/* <Navbar /> */}
             <Routes>
               <Route
                 path={AppRoutes.LANDING_PAGE}

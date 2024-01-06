@@ -45,7 +45,7 @@ export default function LoginModal() {
   };
 
   return (
-    <div className="relative flex gap-6 shadow-lg transition-all rounded-xl overflow-hidden w-full lg:w-[90%] h-full bg-[#191919] text-white">
+    <div className="relative flex gap-6 shadow-lg transition-all rounded-xl overflow-hidden w-full lg:w-[90%] h-full bg-github-black-primary text-white">
       <AuthModalImg />
       <div className="w-[100%] lg:w-[50%]">
         <div onClick={close} className="absolute right-2 top-1">
