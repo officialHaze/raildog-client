@@ -4,13 +4,15 @@ import Handler from "../../classes/Handler";
 import { useContext } from "react";
 import { PopupContext } from "../../App";
 import Loader from "../Loader/Loader";
+import Constants from "../../classes/Constants";
 
 interface Props {
-  email: string;
+  email?: string;
   username: string;
+  isNotVerified?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function VerifyEmail({ email, username }: Props) {
+export default function VerifyEmail({ email, username, isNotVerified }: Props) {
   const { isDisabled, timer, startDisableTimer } = useDisableTimer(
     process.env.REACT_APP_DISABLE_TIMER_IN_SEC
       ? parseInt(process.env.REACT_APP_DISABLE_TIMER_IN_SEC)
@@ -33,7 +35,8 @@ export default function VerifyEmail({ email, username }: Props) {
       </div>
       <div>
         <p>
-          A verification link has been sent to <span className="font-bold">{email}</span>.
+          A verification link has been sent to{" "}
+          {email ? <span className="font-bold">{email}</span> : " your registered email id"}.
         </p>
         <p>Kindly verify your email to activate this account.</p>
       </div>
@@ -49,6 +52,16 @@ export default function VerifyEmail({ email, username }: Props) {
           {!isLoaderRunning ? "Resend Verification Link" : <Loader />}
         </button>
         {isDisabled && <p className="py-2">(Resend again in {timer})</p>}
+      </div>
+      <div className="text-center text-lg">
+        Already verified?{" "}
+        <span
+          id={Constants.LOGIN_BTN}
+          onClick={() => isNotVerified && isNotVerified(false)}
+          className="cursor-pointer text-raildog-blue"
+        >
+          Login
+        </span>
       </div>
     </div>
   );

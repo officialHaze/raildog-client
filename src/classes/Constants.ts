@@ -2,6 +2,8 @@ export default class Constants {
   public static REGISTER_BTN = "REGISTER_BTN";
   public static LOGIN_BTN = "LOGIN_BTN";
   public static MODAL = "MODAL";
+  public static REFRESH_TOKEN = "refresh_token";
+  public static ACCESS_TOKEN = "access_token";
 }
 
 export class ModalTypes extends Constants {

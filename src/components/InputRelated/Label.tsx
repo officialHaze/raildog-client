@@ -10,7 +10,7 @@ export default function Label({ children, className, ref_ }: Props) {
   return (
     <div
       onClick={() => ref_?.current?.focus()}
-      className={`absolute left-2 bg-[#191919] px-2 transition ${className}`}
+      className={`absolute left-2 bg-github-black-primary px-2 transition ${className}`}
     >
       {children}
     </div>
