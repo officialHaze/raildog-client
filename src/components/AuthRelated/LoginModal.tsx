@@ -7,6 +7,11 @@ import AuthModalImg from "./AuthModalImg";
 import LoginData from "../../interfaces/LoginData";
 import LoginForm from "./LoginForm";
 import VerifyEmail from "./VerifyEmail";
+import { createContext } from "react";
+
+type closeLogin = () => void;
+
+export const CloseLoginModalCtx = createContext<closeLogin | null>(null);
 
 export default function LoginModal() {
   const toDisplayModal = useContext(ModalContext);
@@ -52,15 +57,17 @@ export default function LoginModal() {
         </div>
 
         {!toVerifyEmail ? (
-          <LoginForm
-            loginData={loginData}
-            setLoginData={setLoginData}
-            verifyEmail={verifyEmail}
-            labelPos={label}
-            setLabelPos={setLabel}
-          />
+          <CloseLoginModalCtx.Provider value={close}>
+            <LoginForm
+              loginData={loginData}
+              setLoginData={setLoginData}
+              verifyEmail={verifyEmail}
+              labelPos={label}
+              setLabelPos={setLabel}
+            />
+          </CloseLoginModalCtx.Provider>
         ) : (
-          <VerifyEmail username={loginData.username} />
+          <VerifyEmail username={loginData.username} isNotVerified={verifyEmail} />
         )}
       </div>
     </div>

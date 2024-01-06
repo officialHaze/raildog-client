@@ -1,20 +1,22 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Constants from "../../classes/Constants";
 import UsernameInput from "../InputRelated/UsernameInput";
 import PasswordInput from "../InputRelated/PasswordInput";
 import SubmitBtn from "../InputRelated/SubmitBtn";
 import Mappings from "../../classes/Mappings";
-import { PopupContext } from "../../App";
-import { useLoader } from "../../utils/customHooks";
+import { AuthContext, ModalContext, PopupContext } from "../../App";
+import { useFocusIn, useFocusOut, useLoader } from "../../utils/customHooks";
 import Loader from "../Loader/Loader";
 import LoginData from "../../interfaces/LoginData";
 import Handler from "../../classes/Handler";
+import { CloseLoginModalCtx } from "./LoginModal";
+import LabelData from "../../interfaces/LabelData";
 
 interface Props {
   loginData: LoginData;
   setLoginData: React.Dispatch<React.SetStateAction<LoginData>>;
-  labelPos: LoginData;
-  setLabelPos: React.Dispatch<React.SetStateAction<LoginData>>;
+  labelPos: LabelData;
+  setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
   verifyEmail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -38,45 +40,16 @@ export default function LoginForm({
       errorCode: "",
     },
   });
+  const setIsAuthenticated = useContext(AuthContext);
+  const toDisplayModal = useContext(ModalContext);
+  const closeLogin = useContext(CloseLoginModalCtx);
 
-  // Monitor and handle focus in any of the input fields
-  useEffect(() => {
-    const handleFocusin = (e: any) => {
-      // Remove any preloaded error indicator
-      setIndicator({
-        username: {
-          toDisplay: false,
-          errorCode: "",
-        },
+  useFocusIn({ labelPos, setLabelPos, indicator, setIndicator, labels: ["username", "password"] });
+  useFocusOut({ labelPos, setLabelPos, labels: ["username", "password"], focusOutData: loginData });
 
-        password: {
-          toDisplay: false,
-          errorCode: "",
-        },
-      });
-
-      const id = e.target.id;
-      // console.log("Focused in: ", id);
-      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos, indicator);
-    };
-    document.addEventListener("focusin", handleFocusin);
-    return () => {
-      document.removeEventListener("focusin", handleFocusin);
-    };
-  }, [labelPos, setLabelPos, indicator]);
-
-  // Monitor and handle focus out in any of the input fields
-  useEffect(() => {
-    const handleFocusout = (e: any) => {
-      const id = e.target.id;
-      // console.log("Focused out: ", id);
-      id && id.includes("INPUT") && Mappings.focusOutMap[id](labelPos, setLabelPos, loginData);
-    };
-    document.addEventListener("focusout", handleFocusout);
-    return () => {
-      document.removeEventListener("focusout", handleFocusout);
-    };
-  }, [labelPos, setLabelPos, loginData]);
+  if (!setIsAuthenticated) throw new Error("AuthContext value is null");
+  if (!toDisplayModal) throw new Error("Modal context value is null");
+  if (!closeLogin) throw new Error("Close login modal context value is null");
 
   // Handle change in input values
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +60,7 @@ export default function LoginForm({
   const startLoginProcess = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const handler = new Handler(startLoader, endLoader, setPopupDisplay, setIndicator);
-    await handler.handleLogin(loginData, verifyEmail);
+    await handler.handleLogin(loginData, verifyEmail, setIsAuthenticated, closeLogin);
   };
 
   return (

@@ -1,11 +1,12 @@
 import React from "react";
-import { PopupTypes } from "./Constants";
+import Constants, { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
 import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
 import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
+import Cache from "./Cache";
 
 export default class Handler {
   public startLoader: () => void;
@@ -76,7 +77,9 @@ export default class Handler {
 
   public async handleLogin(
     loginData: LoginData,
-    verifyEmail: React.Dispatch<React.SetStateAction<boolean>>
+    verifyEmail: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>,
+    closeLoginModal: () => void
   ) {
     Promise.resolve()
       .then(async () => {
@@ -96,10 +99,26 @@ export default class Handler {
           username_or_email: username,
           password: hash,
         };
-        const res = await Fetcher.login(updatedData);
+        const res: { access_token: string; refresh_token: string } = await Fetcher.login(
+          updatedData
+        );
         console.log("Response after submitting registration data: ", res);
 
         this.endLoader();
+
+        // Save the tokens - access_token in cookie and refresh_token in local storage
+        const { refresh_token, access_token } = res;
+
+        // Save the refresh token first
+        Cache.saveInLocalStorage({ key: Constants.REFRESH_TOKEN, value: refresh_token });
+
+        // Save the access token after
+        Cache.saveInCookie({ cname: Constants.ACCESS_TOKEN, cvalue: access_token, expiryDays: 7 });
+
+        console.log("Tokens saved!");
+
+        setIsAuthenticated(true);
+        closeLoginModal();
       })
       .catch(err => {
         this.handleError(err, async (errStatus?: number) => {

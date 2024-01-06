@@ -1,5 +1,5 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import AppRoutes from "./classes/Routes";
 import Landing from "./pages/Landing";
 import Navbar from "./components/Navbar";
@@ -9,6 +9,8 @@ import Modal from "./components/Modal";
 import { usePopup } from "./utils/customHooks";
 import Popup from "./components/Popup";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Dashboard from "./pages/Dashboard";
+import Cache from "./classes/Cache";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,17 @@ export const PopupContext = createContext<React.Dispatch<
   }>
 > | null>(null);
 
+export const AuthContext = createContext<React.Dispatch<React.SetStateAction<boolean>> | null>(
+  null
+);
+
+// Check cache for the access token to keep the user authenticated
+const isAccessTokenPresent = () => {
+  const accessTokenCookie = Cache.getCookie({ cname: Constants.ACCESS_TOKEN });
+
+  return accessTokenCookie ? true : false;
+};
+
 function App() {
   const [displayModal, toDisplayModal] = useState({
     toDisplay: false,
@@ -35,6 +48,7 @@ function App() {
     payload: null,
   });
   const [displayPopup, setPopupDisplay] = usePopup();
+  const [isAuthenticated, setIsAuthenticated] = useState(isAccessTokenPresent());
 
   // Handle clicks as a side effect
   useEffect(() => {
@@ -81,27 +95,35 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <PopupContext.Provider value={setPopupDisplay}>
-        <div className="App relative min-h-screen">
-          {displayPopup.toDisplay && (
-            <Popup message={displayPopup.message} popupType={displayPopup.popupType} />
-          )}
-          <ModalContext.Provider value={toDisplayModal}>
-            <Modal
-              className={`transition-all ${displayModal.toDisplay ? "scale-100" : "scale-0"}`}
-              modalType={displayModal.modalType}
-              payload={displayModal.payload}
-            />
-          </ModalContext.Provider>
-          <Navbar />
-          <Routes>
-            <Route path={AppRoutes.LANDING_PAGE} element={<Landing />} />
-          </Routes>
-        </div>
-      </PopupContext.Provider>
+      <AuthContext.Provider value={setIsAuthenticated}>
+        <PopupContext.Provider value={setPopupDisplay}>
+          <div className="App relative min-h-screen">
+            {displayPopup.toDisplay && (
+              <Popup message={displayPopup.message} popupType={displayPopup.popupType} />
+            )}
+            <ModalContext.Provider value={toDisplayModal}>
+              <Modal
+                className={`transition-all ${displayModal.toDisplay ? "scale-100" : "scale-0"}`}
+                modalType={displayModal.modalType}
+                payload={displayModal.payload}
+              />
+            </ModalContext.Provider>
+            <Navbar />
+            <Routes>
+              <Route
+                path={AppRoutes.LANDING_PAGE}
+                element={!isAuthenticated ? <Landing /> : <Navigate to={AppRoutes.DASHBOARD} />}
+              />
+              <Route
+                path={AppRoutes.DASHBOARD}
+                element={isAuthenticated ? <Dashboard /> : <Navigate to={AppRoutes.LANDING_PAGE} />}
+              />
+            </Routes>
+          </div>
+        </PopupContext.Provider>
+      </AuthContext.Provider>
     </QueryClientProvider>
   );
 }
 
 export default App;
-

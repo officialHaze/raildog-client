@@ -1,5 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LabelData from "../interfaces/LabelData";
+import Mappings from "../classes/Mappings";
+import LoginData from "../interfaces/LoginData";
+import RegistrationData from "../interfaces/RegistrationData";
 
 export const useRegistrationLabel = (): [
   label: LabelData,
@@ -129,4 +132,62 @@ export const useDisableTimer = (
   }, [timer]);
 
   return { isDisabled, timer, startDisableTimer };
+};
+
+export const useFocusIn = ({
+  labelPos,
+  setLabelPos,
+  indicator,
+  setIndicator,
+  labels,
+}: {
+  labelPos: LabelData;
+  setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
+  indicator: any;
+  setIndicator: React.Dispatch<React.SetStateAction<any>>;
+  labels: string[];
+}) => {
+  // Monitor and handle focus in any of the input fields
+  useEffect(() => {
+    const handleFocusin = (e: any) => {
+      // Remove any preloaded error indicator
+      setIndicator((prevState: any) => {
+        const state = prevState;
+        labels.forEach(label => (state[label] = { toDisplay: false, errorCode: "" }));
+        return { ...state };
+      });
+      const id = e.target.id;
+      // console.log("Focused in: ", id);
+      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos, indicator);
+    };
+    document.addEventListener("focusin", handleFocusin);
+    return () => {
+      document.removeEventListener("focusin", handleFocusin);
+    };
+  }, [labelPos, setLabelPos, indicator, labels, setIndicator]);
+};
+
+export const useFocusOut = ({
+  labelPos,
+  setLabelPos,
+  labels,
+  focusOutData,
+}: {
+  labelPos: LabelData;
+  setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
+  labels: string[];
+  focusOutData: LoginData | RegistrationData;
+}) => {
+  // Monitor and handle focus in any of the input fields
+  useEffect(() => {
+    const handleFocusout = (e: any) => {
+      const id = e.target.id;
+      // console.log("Focused in: ", id);
+      id && id.includes("INPUT") && Mappings.focusOutMap[id](labelPos, setLabelPos, focusOutData);
+    };
+    document.addEventListener("focusout", handleFocusout);
+    return () => {
+      document.removeEventListener("focusout", handleFocusout);
+    };
+  }, [labelPos, setLabelPos, labels, focusOutData]);
 };
