@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import { FaUserAstronaut } from "react-icons/fa6";
-import { AuthContext } from "../App";
-import logout from "../utils/AuthRelated/logout";
+import { AuthContext } from "../../App";
+import logout from "../../utils/AuthRelated/logout";
 import { RiLogoutCircleLine } from "react-icons/ri";
+import sidePanelOptions from "../../utils/SidePanelRelated/SidePanelOptions";
+import SidePanelOption from "./SidePanelOption";
 
 export default function SidePanel() {
   const setIsAuthenticated = useContext(AuthContext);
@@ -16,9 +18,13 @@ export default function SidePanel() {
         <h2>Moinak Dey</h2>
       </div>
 
-      <div className="bg-github-black-primary px-6 py-6 h-[75%] overflow-auto">options</div>
+      <div className="bg-github-black-primary py-4 h-[75%] overflow-auto flex flex-col gap-4">
+        {sidePanelOptions.map(option => (
+          <SidePanelOption key={option.id} optionName={option.name} id={option.id} />
+        ))}
+      </div>
 
-      <div className="h-[8%] px-4 py-4">
+      <div className="h-[8%] px-4 py-4 white-border-t">
         <div
           className="flex items-center gap-2 text-xl cursor-pointer text-slate-500"
           onClick={() => logout({ setIsAuthenticated })}
