@@ -1,12 +1,12 @@
 import React from "react";
-import Constants, { PopupTypes } from "./Constants";
+import { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
 import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
 import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
-import Cache from "./Cache";
+import login from "../utils/AuthRelated/login";
 
 export default class Handler {
   public startLoader: () => void;
@@ -106,19 +106,12 @@ export default class Handler {
 
         this.endLoader();
 
-        // Save the tokens - access_token in cookie and refresh_token in local storage
-        const { refresh_token, access_token } = res;
-
-        // Save the refresh token first
-        Cache.saveInLocalStorage({ key: Constants.REFRESH_TOKEN, value: refresh_token });
-
-        // Save the access token after
-        Cache.saveInCookie({ cname: Constants.ACCESS_TOKEN, cvalue: access_token, expiryDays: 7 });
-
-        console.log("Tokens saved!");
-
-        setIsAuthenticated(true);
         closeLoginModal();
+        login({
+          setIsAuthenticated,
+          accessToken: res.access_token,
+          refreshToken: res.refresh_token,
+        });
       })
       .catch(err => {
         this.handleError(err, async (errStatus?: number) => {
