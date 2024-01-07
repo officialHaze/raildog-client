@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import SidePanel from "../components/SidePanelRelated/SidePanel";
 import { SidePanelOptionsId } from "../classes/Constants";
+import DashboardContent from "../components/DashboardRelated/DashboardContent";
 
 export interface SideOptionSelectState {
   isSelected: string;
@@ -15,8 +16,8 @@ export default function Dashboard() {
     <div className="flex h-screen">
       <SideOptionSelectCtx.Provider value={{ isSelected, setIsSelected }}>
         <SidePanel />
+        <DashboardContent selectedOpt={isSelected} />
       </SideOptionSelectCtx.Provider>
-      <div className="h-full w-full text-white overflow-auto">Stats and info</div>
     </div>
   );
 }

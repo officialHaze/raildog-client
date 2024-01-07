@@ -15,7 +15,18 @@ const sidePanelOptions = [
         name: "Sniff Trains",
         id: SidePanelOptionsId.RAILDOG_SUB_SNIFF_TRAINS,
       },
+
+      {
+        name: "Sniff Live Status",
+        id: SidePanelOptionsId.RAILDOG_SUB_SNIFF_LIVE_STATUS,
+      },
     ],
+  },
+
+  {
+    name: "Documentation",
+    id: SidePanelOptionsId.DOC,
+    suboptions: [],
   },
 ];
 

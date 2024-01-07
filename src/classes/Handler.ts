@@ -1,5 +1,5 @@
 import React from "react";
-import { PopupTypes } from "./Constants";
+import Constants, { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
@@ -7,6 +7,8 @@ import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
 import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
 import login from "../utils/AuthRelated/login";
+import Cache from "./Cache";
+import logout from "../utils/AuthRelated/logout";
 
 export default class Handler {
   public startLoader: () => void;
@@ -148,6 +150,47 @@ export default class Handler {
     }
   }
 
+  public async handleAPIKeyGeneration(
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+    Promise.resolve()
+      .then(async () => {
+        const { data } = await axiosInstance.get("/auth/generate_api_key");
+        console.log(data);
+      })
+      .catch(err => {
+        this.handleError(err, async (errStatus?: number) => {
+          if (errStatus && errStatus === 401) {
+            try {
+              // Get the stored refresh token
+              const oldRefreshToken = Cache.getFromLocalStorage({ key: Constants.REFRESH_TOKEN });
+
+              const { data } = await axiosInstance.post("/refresh_token", {
+                refresh_token: oldRefreshToken,
+              });
+              console.log("Response after refreshing the tokens: ", data);
+              // save the tokens
+              Cache.saveInLocalStorage({
+                key: Constants.REFRESH_TOKEN,
+                value: data.refresh_token,
+              });
+              Cache.saveInCookie({
+                cname: Constants.ACCESS_TOKEN,
+                cvalue: data.access_token,
+                expiryDays: 3,
+              });
+
+              // Call the method again
+              this.handleAPIKeyGeneration(setIsAuthenticated);
+            } catch (err) {
+              console.error(err);
+              logout({ setIsAuthenticated });
+            }
+          }
+        });
+      });
+  }
+
   public handleError(err: any, callback: (errStatus?: number) => void) {
     console.log(err);
 
@@ -169,19 +212,17 @@ export default class Handler {
       const errstatus = err.response.status;
 
       const errmsg = err.response.data.Error;
+
+      if (errstatus === 401) {
+        return callback(errstatus);
+      }
+
       this.setPopup &&
         this.setPopup({
           toDisplay: true,
           message: errmsg,
           popupType: PopupTypes.ERROR_POPUP,
         });
-
-      if (errstatus === 401) {
-        // Do other refresh token related stuff if required
-
-        callback();
-        return;
-      }
 
       callback(errstatus);
 
