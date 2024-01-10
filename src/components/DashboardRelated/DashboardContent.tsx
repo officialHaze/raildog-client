@@ -1,4 +1,4 @@
-import APIKeysContent from "./APIKeysContent";
+import APIKeysContent from "./APIKeysRelated/APIKeysContent";
 
 interface Props {
   selectedOpt: string;

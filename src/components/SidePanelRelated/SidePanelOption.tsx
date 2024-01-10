@@ -47,8 +47,9 @@ export default function SidePanelOption({ optionName, id, suboptions }: Props) {
       </div>
 
       <div className={`transition-all ${!arrowDown ? "h-0" : "h-fit"} overflow-hidden`}>
-        {suboptions.map(suboption => (
+        {suboptions.map((suboption, i) => (
           <SidePanelSubOption
+            key={i}
             subOptionName={suboption.name}
             id={suboption.id}
             isSelected={isSubOptSelected === suboption.id}

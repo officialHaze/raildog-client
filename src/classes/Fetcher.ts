@@ -20,4 +20,13 @@ export default class Fetcher {
       throw error;
     }
   }
+
+  public static async getApiKeys() {
+    try {
+      const { data } = await axiosInstance.get("/auth/get_api_keys");
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

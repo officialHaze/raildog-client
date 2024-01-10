@@ -1,5 +1,5 @@
 import React from "react";
-import Constants, { PopupTypes } from "./Constants";
+import { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
@@ -7,8 +7,8 @@ import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
 import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
 import login from "../utils/AuthRelated/login";
-import Cache from "./Cache";
 import logout from "../utils/AuthRelated/logout";
+import replaceTokens from "../utils/AuthRelated/replaceTokens";
 
 export default class Handler {
   public startLoader: () => void;
@@ -155,31 +155,17 @@ export default class Handler {
   ) {
     Promise.resolve()
       .then(async () => {
+        this.startLoader();
         const { data } = await axiosInstance.get("/auth/generate_api_key");
+        this.endLoader();
         console.log(data);
       })
       .catch(err => {
         this.handleError(err, async (errStatus?: number) => {
+          this.endLoader();
           if (errStatus && errStatus === 401) {
             try {
-              // Get the stored refresh token
-              const oldRefreshToken = Cache.getFromLocalStorage({ key: Constants.REFRESH_TOKEN });
-
-              const { data } = await axiosInstance.post("/refresh_token", {
-                refresh_token: oldRefreshToken,
-              });
-              console.log("Response after refreshing the tokens: ", data);
-              // save the tokens
-              Cache.saveInLocalStorage({
-                key: Constants.REFRESH_TOKEN,
-                value: data.refresh_token,
-              });
-              Cache.saveInCookie({
-                cname: Constants.ACCESS_TOKEN,
-                cvalue: data.access_token,
-                expiryDays: 3,
-              });
-
+              await replaceTokens();
               // Call the method again
               this.handleAPIKeyGeneration(setIsAuthenticated);
             } catch (err) {
@@ -225,21 +211,6 @@ export default class Handler {
         });
 
       callback(errstatus);
-
-      // switch (errstatus) {
-      //   case 400:
-      //     callback();
-      //     break;
-
-      //   case 403:
-
-      //   case 401:
-      //     callback();
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     } else {
       this.setPopup &&
         this.setPopup({

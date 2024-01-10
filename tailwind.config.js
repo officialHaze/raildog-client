@@ -12,6 +12,9 @@ module.exports = {
       boxShadow: {
         "all-4": "2px 2px 15px 1px",
       },
+      fontFamily: {
+        "api-key-400": "font-family: 'Dosis', sans-serif;",
+      },
     },
   },
   plugins: [],
