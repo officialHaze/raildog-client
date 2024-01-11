@@ -177,6 +177,90 @@ export default class Handler {
       });
   }
 
+  public async handleAPIKeyUpdate({
+    update_type,
+    api_key_ids,
+    setIsAuthenticated,
+    setIsEnabled,
+  }: {
+    update_type: string;
+    api_key_ids: string[];
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  }) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.put("/auth/update_api_keys", {
+        update_type,
+        api_key_ids,
+      });
+      console.log("Response after updating API key: ", data);
+      this.endLoader();
+
+      // Toggle enable / disable
+      setIsEnabled(update_type === "enable" ? true : false);
+    } catch (err) {
+      this.handleError(err, async (errStatus?: number) => {
+        this.endLoader();
+        if (errStatus && errStatus === 401) {
+          try {
+            await replaceTokens();
+            // Call the method again
+            this.handleAPIKeyUpdate({
+              update_type,
+              api_key_ids,
+              setIsAuthenticated,
+              setIsEnabled,
+            });
+          } catch (err) {
+            console.error(err);
+            logout({ setIsAuthenticated });
+          }
+        }
+      });
+    }
+  }
+
+  // Handle API key delete
+  public async handleAPIKeyDelete({
+    api_key_ids,
+    setIsAuthenticated,
+  }: {
+    api_key_ids: string[];
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  }) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.delete("/auth/delete_api_keys", {
+        data: {
+          api_key_ids,
+        },
+      });
+      console.log("Response after deleting API key: ", data);
+      this.endLoader();
+
+      // refresh the window
+      window.location.reload();
+    } catch (err) {
+      this.handleError(err, async (errStatus?: number) => {
+        this.endLoader();
+        if (errStatus && errStatus === 401) {
+          try {
+            await replaceTokens();
+            // Call the method again
+            this.handleAPIKeyDelete({
+              api_key_ids,
+              setIsAuthenticated,
+            });
+          } catch (err) {
+            console.error(err);
+            logout({ setIsAuthenticated });
+          }
+        }
+      });
+    }
+  }
+
   public handleError(err: any, callback: (errStatus?: number) => void) {
     console.log(err);
 

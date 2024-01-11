@@ -74,6 +74,7 @@ export default function APIKeysContent() {
         <button
           className="py-2 px-4 my-4 w-[15%] bg-blue-500 rounded-lg hover:bg-blue-400"
           onClick={handleClick}
+          disabled={isLoaderRunning}
         >
           {!isLoaderRunning ? "Generate API Key" : <Loader />}
         </button>
