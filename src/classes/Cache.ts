@@ -1,15 +1,17 @@
-import { AES } from "crypto-js";
-
 export default class Cache {
   public static saveInLocalStorage({ key, value }: { key: string; value: string }) {
-    // encrypt the value
-    const encrypted = AES.encrypt(value, "mysecretaeskey").toString();
-    // save the encrypted value
-    localStorage.setItem(key, encrypted);
+    localStorage.setItem(key, value);
   }
 
   public static deleteFromLocalStorage({ key }: { key: string }) {
     localStorage.removeItem(key);
+  }
+
+  public static getFromLocalStorage({ key }: { key: string }) {
+    const value = localStorage.getItem(key);
+    if (!value) throw new Error("Item not found in Local Storage!");
+
+    return value;
   }
 
   public static saveInCookie({

@@ -15,6 +15,10 @@
     @apply border-r-[1px] border-r-[#373A40];
   }
 
+  .white-border-t {
+    @apply border-t-[1px] border-t-[#373A40];
+  }
+
   .input-icon {
     @apply absolute right-4 text-xl cursor-pointer;
   }

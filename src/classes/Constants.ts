@@ -53,3 +53,13 @@ export class ErrorTexts {
     A01: "Please select a role!",
   };
 }
+
+export class SidePanelOptionsId {
+  public static API_KEYS = "API_KEYS";
+  public static RAILDOG_API = "RAILDOG_API";
+  public static DOC = "DOC";
+
+  // Sub options id
+  public static RAILDOG_SUB_SNIFF_TRAINS = "RAILDOG_SUB_SNIFF_TRAINS";
+  public static RAILDOG_SUB_SNIFF_LIVE_STATUS = "RAILDOG_SUB_SNIFF_LIVE_STATUS";
+}

@@ -7,6 +7,8 @@ import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
 import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
 import login from "../utils/AuthRelated/login";
+import logout from "../utils/AuthRelated/logout";
+import replaceTokens from "../utils/AuthRelated/replaceTokens";
 
 export default class Handler {
   public startLoader: () => void;
@@ -148,6 +150,117 @@ export default class Handler {
     }
   }
 
+  public async handleAPIKeyGeneration(
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+    Promise.resolve()
+      .then(async () => {
+        this.startLoader();
+        const { data } = await axiosInstance.get("/auth/generate_api_key");
+        this.endLoader();
+        console.log(data);
+      })
+      .catch(err => {
+        this.handleError(err, async (errStatus?: number) => {
+          this.endLoader();
+          if (errStatus && errStatus === 401) {
+            try {
+              await replaceTokens();
+              // Call the method again
+              this.handleAPIKeyGeneration(setIsAuthenticated);
+            } catch (err) {
+              console.error(err);
+              logout({ setIsAuthenticated });
+            }
+          }
+        });
+      });
+  }
+
+  public async handleAPIKeyUpdate({
+    update_type,
+    api_key_ids,
+    setIsAuthenticated,
+    setIsEnabled,
+  }: {
+    update_type: string;
+    api_key_ids: string[];
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  }) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.put("/auth/update_api_keys", {
+        update_type,
+        api_key_ids,
+      });
+      console.log("Response after updating API key: ", data);
+      this.endLoader();
+
+      // Toggle enable / disable
+      setIsEnabled(update_type === "enable" ? true : false);
+    } catch (err) {
+      this.handleError(err, async (errStatus?: number) => {
+        this.endLoader();
+        if (errStatus && errStatus === 401) {
+          try {
+            await replaceTokens();
+            // Call the method again
+            this.handleAPIKeyUpdate({
+              update_type,
+              api_key_ids,
+              setIsAuthenticated,
+              setIsEnabled,
+            });
+          } catch (err) {
+            console.error(err);
+            logout({ setIsAuthenticated });
+          }
+        }
+      });
+    }
+  }
+
+  // Handle API key delete
+  public async handleAPIKeyDelete({
+    api_key_ids,
+    setIsAuthenticated,
+  }: {
+    api_key_ids: string[];
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  }) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.delete("/auth/delete_api_keys", {
+        data: {
+          api_key_ids,
+        },
+      });
+      console.log("Response after deleting API key: ", data);
+      this.endLoader();
+
+      // refresh the window
+      window.location.reload();
+    } catch (err) {
+      this.handleError(err, async (errStatus?: number) => {
+        this.endLoader();
+        if (errStatus && errStatus === 401) {
+          try {
+            await replaceTokens();
+            // Call the method again
+            this.handleAPIKeyDelete({
+              api_key_ids,
+              setIsAuthenticated,
+            });
+          } catch (err) {
+            console.error(err);
+            logout({ setIsAuthenticated });
+          }
+        }
+      });
+    }
+  }
+
   public handleError(err: any, callback: (errStatus?: number) => void) {
     console.log(err);
 
@@ -169,6 +282,11 @@ export default class Handler {
       const errstatus = err.response.status;
 
       const errmsg = err.response.data.Error;
+
+      if (errstatus === 401) {
+        return callback(errstatus);
+      }
+
       this.setPopup &&
         this.setPopup({
           toDisplay: true,
@@ -176,29 +294,7 @@ export default class Handler {
           popupType: PopupTypes.ERROR_POPUP,
         });
 
-      if (errstatus === 401) {
-        // Do other refresh token related stuff if required
-
-        callback();
-        return;
-      }
-
       callback(errstatus);
-
-      // switch (errstatus) {
-      //   case 400:
-      //     callback();
-      //     break;
-
-      //   case 403:
-
-      //   case 401:
-      //     callback();
-      //     break;
-
-      //   default:
-      //     break;
-      // }
     } else {
       this.setPopup &&
         this.setPopup({
