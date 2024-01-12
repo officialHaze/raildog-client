@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Constants, { InputTypes } from "../../classes/Constants";
 import RegistrationData from "../../interfaces/RegistrationData";
 import EmailInput from "../InputRelated/EmailInput";
@@ -10,14 +10,15 @@ import SubmitBtn from "../InputRelated/SubmitBtn";
 import Mappings from "../../classes/Mappings";
 import Handler from "../../classes/Handler";
 import { PopupContext } from "../../App";
-import { useLoader } from "../../utils/customHooks";
+import { useFocusIn, useFocusOut, useLoader } from "../../utils/customHooks";
 import Loader from "../Loader/Loader";
+import LabelData from "../../interfaces/LabelData";
 
 interface Props {
   registerData: RegistrationData;
   setRegisterData: React.Dispatch<React.SetStateAction<RegistrationData>>;
-  labelPos: RegistrationData;
-  setLabelPos: React.Dispatch<React.SetStateAction<RegistrationData>>;
+  labelPos: LabelData;
+  setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
   isRegistrationComplete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -62,64 +63,19 @@ export default function RegisterForm({
     },
   });
 
-  // Monitor and handle focus in any of the input fields
-  useEffect(() => {
-    const handleFocusin = (e: any) => {
-      // Remove any preloaded error indicator
-      setIndicator({
-        email: {
-          toDisplay: false,
-          errorCode: "",
-        },
-
-        username: {
-          toDisplay: false,
-          errorCode: "",
-        },
-
-        phone: {
-          toDisplay: false,
-          errorCode: "",
-        },
-
-        password: {
-          toDisplay: false,
-          errorCode: "",
-        },
-
-        confirmPassword: {
-          toDisplay: false,
-          errorCode: "",
-        },
-
-        role: {
-          toDisplay: false,
-          errorCode: "",
-        },
-      });
-
-      const id = e.target.id;
-      // console.log("Focused in: ", id);
-      id && id.includes("INPUT") && Mappings.focusInMap[id](labelPos, setLabelPos, indicator);
-    };
-    document.addEventListener("focusin", handleFocusin);
-    return () => {
-      document.removeEventListener("focusin", handleFocusin);
-    };
-  }, [labelPos, setLabelPos, indicator]);
-
-  // Monitor and handle focus out in any of the input fields
-  useEffect(() => {
-    const handleFocusout = (e: any) => {
-      const id = e.target.id;
-      // console.log("Focused out: ", id);
-      id && id.includes("INPUT") && Mappings.focusOutMap[id](labelPos, setLabelPos, registerData);
-    };
-    document.addEventListener("focusout", handleFocusout);
-    return () => {
-      document.removeEventListener("focusout", handleFocusout);
-    };
-  }, [labelPos, setLabelPos, registerData]);
+  useFocusIn({
+    labelPos,
+    setLabelPos,
+    indicator,
+    setIndicator,
+    labels: ["email", "username", "password", "confirmPassword", "phone", "role"],
+  });
+  useFocusOut({
+    labelPos,
+    setLabelPos,
+    focusOutData: registerData,
+    labels: ["email", "username", "password", "confirmPassword", "phone"],
+  });
 
   // Handle change in input values
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

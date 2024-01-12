@@ -1,10 +1,12 @@
 import React from "react";
-import { PopupTypes } from "./Constants";
+import Constants, { PopupTypes } from "./Constants";
 import RegistrationData from "../interfaces/RegistrationData";
 import Fetcher from "./Fetcher";
 import Validator from "./Validator";
 import Hasher from "./Hasher";
 import axiosInstance from "../utils/axiosConfig";
+import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
+import Cache from "./Cache";
 
 export default class Handler {
   public startLoader: () => void;
@@ -73,11 +75,71 @@ export default class Handler {
       });
   }
 
+  public async handleLogin(
+    loginData: LoginData,
+    verifyEmail: React.Dispatch<React.SetStateAction<boolean>>,
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>,
+    closeLoginModal: () => void
+  ) {
+    Promise.resolve()
+      .then(async () => {
+        Validator.validateLoginData(loginData);
+
+        console.log("LOGIN DATA: ", loginData);
+
+        this.startLoader();
+
+        const { username, password } = loginData;
+
+        // Hash the password
+        const hash = Hasher.hashPass(password);
+        console.log("Hashed pass: ", hash);
+
+        const updatedData: LoginDataToSubmit = {
+          username_or_email: username,
+          password: hash,
+        };
+        const res: { access_token: string; refresh_token: string } = await Fetcher.login(
+          updatedData
+        );
+        console.log("Response after submitting registration data: ", res);
+
+        this.endLoader();
+
+        // Save the tokens - access_token in cookie and refresh_token in local storage
+        const { refresh_token, access_token } = res;
+
+        // Save the refresh token first
+        Cache.saveInLocalStorage({ key: Constants.REFRESH_TOKEN, value: refresh_token });
+
+        // Save the access token after
+        Cache.saveInCookie({ cname: Constants.ACCESS_TOKEN, cvalue: access_token, expiryDays: 7 });
+
+        console.log("Tokens saved!");
+
+        setIsAuthenticated(true);
+        closeLoginModal();
+      })
+      .catch(err => {
+        this.handleError(err, async (errStatus?: number) => {
+          if (errStatus && errStatus === 403) {
+            // Send verification email
+            await this.handleResendVerifyEmail(loginData.username);
+            // show verify email component
+            verifyEmail(true);
+          }
+          this.endLoader();
+        });
+      });
+  }
+
   public async handleResendVerifyEmail(username: string) {
     try {
       this.startLoader();
 
-      const { data } = await axiosInstance.post("/send_verification_email", { username });
+      const { data } = await axiosInstance.post("/send_verification_email", {
+        username_or_email: username,
+      });
       console.log("Response after calling resend verification email api: ", data);
 
       this.endLoader();
@@ -93,7 +155,7 @@ export default class Handler {
     }
   }
 
-  public handleError(err: any, callback: () => void) {
+  public handleError(err: any, callback: (errStatus?: number) => void) {
     console.log(err);
 
     if (err.errorCode) {
@@ -112,21 +174,38 @@ export default class Handler {
       callback();
     } else if (err.response) {
       const errstatus = err.response.status;
-      switch (errstatus) {
-        case 400:
-          const errmsg = err.response.data.Error;
-          this.setPopup &&
-            this.setPopup({
-              toDisplay: true,
-              message: errmsg,
-              popupType: PopupTypes.ERROR_POPUP,
-            });
-          callback();
-          break;
 
-        default:
-          break;
+      const errmsg = err.response.data.Error;
+      this.setPopup &&
+        this.setPopup({
+          toDisplay: true,
+          message: errmsg,
+          popupType: PopupTypes.ERROR_POPUP,
+        });
+
+      if (errstatus === 401) {
+        // Do other refresh token related stuff if required
+
+        callback();
+        return;
       }
+
+      callback(errstatus);
+
+      // switch (errstatus) {
+      //   case 400:
+      //     callback();
+      //     break;
+
+      //   case 403:
+
+      //   case 401:
+      //     callback();
+      //     break;
+
+      //   default:
+      //     break;
+      // }
     } else {
       this.setPopup &&
         this.setPopup({
