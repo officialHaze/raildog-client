@@ -5,6 +5,7 @@ import SidePanelSubOption from "./SidePanelSubOption";
 
 interface SidePanelSubOptionData {
   name: string;
+  reqMethod?: string;
   id: string;
 }
 
@@ -54,6 +55,7 @@ export default function SidePanelOption({ optionName, id, suboptions }: Props) {
             id={suboption.id}
             isSelected={isSubOptSelected === suboption.id}
             setIsSelected={setIsSubOptSelected}
+            reqMethod={suboption.reqMethod}
           />
         ))}
       </div>
