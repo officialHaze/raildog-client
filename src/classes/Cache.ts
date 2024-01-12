@@ -8,6 +8,10 @@ export default class Cache {
     localStorage.setItem(key, encrypted);
   }
 
+  public static deleteFromLocalStorage({ key }: { key: string }) {
+    localStorage.removeItem(key);
+  }
+
   public static saveInCookie({
     cname,
     cvalue,
@@ -44,5 +48,9 @@ export default class Cache {
     console.log("Cookie: ", cookie);
 
     return cookie;
+  }
+
+  public static deleteCookie({ cname }: { cname: string }) {
+    document.cookie = `${cname}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   }
 }

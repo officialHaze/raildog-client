@@ -4,11 +4,15 @@
 
 @layer components {
   body {
-    @apply bg-[#191919];
+    @apply bg-github-black-primary;
   }
 
   .white-border {
     @apply border-b-[1px] border-b-[#373A40];
+  }
+
+  .white-border-r {
+    @apply border-r-[1px] border-r-[#373A40];
   }
 
   .input-icon {
@@ -28,11 +32,11 @@
   }
 
   input {
-    @apply focus:outline-blue-500 outline outline-1 outline-slate-400 w-full px-4 py-2 rounded-lg bg-[#191919];
+    @apply focus:outline-blue-500 outline outline-1 outline-slate-400 w-full px-4 py-2 rounded-lg bg-github-black-primary;
   }
 
   input[type="radio"] {
-    @apply outline-none focus:outline-none bg-[#191919];
+    @apply outline-none focus:outline-none bg-github-black-primary;
   }
 }
 
@@ -87,4 +91,3 @@ input:focus:-khtml-autofill {
   -khtml-text-fill-color: $black;
   -khtml-box-shadow: 0 0 0px 1000px white inset;
 }
-
