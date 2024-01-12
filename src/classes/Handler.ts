@@ -9,6 +9,7 @@ import LoginData, { LoginDataToSubmit } from "../interfaces/LoginData";
 import login from "../utils/AuthRelated/login";
 import logout from "../utils/AuthRelated/logout";
 import replaceTokens from "../utils/AuthRelated/replaceTokens";
+import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
 
 export default class Handler {
   public startLoader: () => void;
@@ -151,7 +152,8 @@ export default class Handler {
   }
 
   public async handleAPIKeyGeneration(
-    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
+    setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>,
+    setNewAPIKey: React.Dispatch<React.SetStateAction<APIKeyObj[] | null | undefined>>
   ) {
     Promise.resolve()
       .then(async () => {
@@ -159,6 +161,11 @@ export default class Handler {
         const { data } = await axiosInstance.get("/auth/generate_api_key");
         this.endLoader();
         console.log(data);
+
+        // Update the new api key in the list
+        setNewAPIKey(prevState => {
+          if (prevState) return [...prevState, data];
+        });
       })
       .catch(err => {
         this.handleError(err, async (errStatus?: number) => {
@@ -167,7 +174,7 @@ export default class Handler {
             try {
               await replaceTokens();
               // Call the method again
-              this.handleAPIKeyGeneration(setIsAuthenticated);
+              this.handleAPIKeyGeneration(setIsAuthenticated, setNewAPIKey);
             } catch (err) {
               console.error(err);
               logout({ setIsAuthenticated });
@@ -225,22 +232,33 @@ export default class Handler {
   public async handleAPIKeyDelete({
     api_key_ids,
     setIsAuthenticated,
+    apiKeysObj,
+    setAPIKeyObj,
   }: {
-    api_key_ids: string[];
+    api_key_ids: { id: string; idxPos: number }[];
     setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+    apiKeysObj: APIKeyObj[];
+    setAPIKeyObj: React.Dispatch<React.SetStateAction<APIKeyObj[] | null | undefined>>;
   }) {
     try {
       this.startLoader();
+      const ids = api_key_ids.map(obj => obj.id);
       const { data } = await axiosInstance.delete("/auth/delete_api_keys", {
         data: {
-          api_key_ids,
+          api_key_ids: ids,
         },
       });
       console.log("Response after deleting API key: ", data);
       this.endLoader();
 
-      // refresh the window
-      window.location.reload();
+      // Remove the api key obj for each api key id obj
+      const apiKeysObjArr = apiKeysObj;
+      for (const idObj of api_key_ids) {
+        const idx = idObj.idxPos;
+        apiKeysObjArr.splice(idx, 1);
+      }
+      // Update the list
+      setAPIKeyObj([...apiKeysObjArr]);
     } catch (err) {
       this.handleError(err, async (errStatus?: number) => {
         this.endLoader();
@@ -251,6 +269,8 @@ export default class Handler {
             this.handleAPIKeyDelete({
               api_key_ids,
               setIsAuthenticated,
+              apiKeysObj,
+              setAPIKeyObj,
             });
           } catch (err) {
             console.error(err);

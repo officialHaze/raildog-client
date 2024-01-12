@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Handler from "../../../classes/Handler";
 import { AuthContext, PopupContext } from "../../../App";
 import { useLoader } from "../../../utils/customHooks";
@@ -9,6 +9,7 @@ import replaceTokens from "../../../utils/AuthRelated/replaceTokens";
 import logout from "../../../utils/AuthRelated/logout";
 import APIKeySkeleton from "../../Decorations/APIKeySkeleton";
 import APIKeyHolder from "./APIKeyHolder";
+import { APIKeyObj } from "../../../interfaces/states/APIKeysQueryData";
 
 export default function APIKeysContent() {
   const setPopupDisplay = useContext(PopupContext);
@@ -18,8 +19,15 @@ export default function APIKeysContent() {
     queryKey: ["APIKeys"],
     queryFn: Fetcher.getApiKeys,
   });
+  const [apikeysData, setApiKeysData] = useState<APIKeyObj[] | null | undefined>(null);
 
   if (!setIsAuthenticated) throw new Error("Auth context value is null");
+
+  // Update the API keys state whenever api keys query data is available
+  useEffect(() => {
+    setApiKeysData(apiKeysQuery.data?.api_keys);
+    return () => setApiKeysData(null);
+  }, [apiKeysQuery.data]);
 
   if (apiKeysQuery.status === "error") {
     const handler = new Handler(startLoader, endLoader, setPopupDisplay);
@@ -39,7 +47,7 @@ export default function APIKeysContent() {
 
   const handleClick = async () => {
     const handler = new Handler(startLoader, endLoader, setPopupDisplay);
-    await handler.handleAPIKeyGeneration(setIsAuthenticated);
+    handler.handleAPIKeyGeneration(setIsAuthenticated, setApiKeysData);
   };
 
   return (
@@ -58,7 +66,7 @@ export default function APIKeysContent() {
         <h2>Generated keys:</h2>
         <div>
           {apiKeysQuery.status === "pending" && <APIKeySkeleton />}
-          {apiKeysQuery.data?.api_keys.map(
+          {apikeysData?.map(
             (apikeyObj: { _id: string; api_key: string; is_enabled: boolean }, i: number) => {
               return (
                 <APIKeyHolder
@@ -66,6 +74,9 @@ export default function APIKeysContent() {
                   _id={apikeyObj._id}
                   api_key={apikeyObj.api_key}
                   is_enabled={apikeyObj.is_enabled}
+                  idxPos={i}
+                  apikeysObj={apikeysData}
+                  setAPIKeysObj={setApiKeysData}
                 />
               );
             }

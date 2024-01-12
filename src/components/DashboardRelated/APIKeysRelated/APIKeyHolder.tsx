@@ -6,14 +6,25 @@ import { FaPowerOff } from "react-icons/fa6";
 import { AiFillDelete } from "react-icons/ai";
 import { useLoader } from "../../../utils/customHooks";
 import Handler from "../../../classes/Handler";
+import { APIKeyObj } from "../../../interfaces/states/APIKeysQueryData";
 
 interface Props {
   _id: string;
   api_key: string;
   is_enabled: boolean;
+  idxPos: number;
+  apikeysObj: APIKeyObj[] | null | undefined;
+  setAPIKeysObj: React.Dispatch<React.SetStateAction<APIKeyObj[] | null | undefined>>;
 }
 
-export default function APIKeyHolder({ _id: id, api_key, is_enabled }: Props) {
+export default function APIKeyHolder({
+  _id: id,
+  api_key,
+  is_enabled,
+  idxPos,
+  apikeysObj,
+  setAPIKeysObj,
+}: Props) {
   const setPopupDisplay = useContext(PopupContext);
   const setIsAuthenticated = useContext(AuthContext);
   const { startLoader, endLoader, isRunning: isLoaderRunning } = useLoader();
@@ -62,8 +73,13 @@ export default function APIKeyHolder({ _id: id, api_key, is_enabled }: Props) {
   };
 
   const deleteAPIKey = (handler: Handler) => {
-    const api_key_ids = [id];
-    handler.handleAPIKeyDelete({ api_key_ids, setIsAuthenticated });
+    const api_key_ids_obj = [{ id, idxPos }];
+    handler.handleAPIKeyDelete({
+      api_key_ids: api_key_ids_obj,
+      apiKeysObj: apikeysObj ?? [],
+      setAPIKeyObj: setAPIKeysObj,
+      setIsAuthenticated,
+    });
   };
 
   return (
@@ -77,7 +93,7 @@ export default function APIKeyHolder({ _id: id, api_key, is_enabled }: Props) {
         <FaCopy className="cursor-pointer" onClick={copyAPIKey} />
         {!isLoaderRunning && (
           <FaPowerOff
-            id="TOGGLE"
+            id={`TOGGLE`}
             className={`cursor-pointer ${isEnabled ? "text-green-500" : "text-red-500"}`}
             onClick={handleClick}
           />
