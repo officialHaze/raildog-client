@@ -1,5 +1,7 @@
-import RegistrationData from "../interfaces/RegistrationData";
+// import RegistrationData from "../interfaces/RegistrationData";
+import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
 import errCodeMap from "../json/errorCodeMappings.json";
+import Constants from "./Constants";
 
 export default class Validator {
   public static validateRegistrationData(data: any) {
@@ -38,6 +40,22 @@ export default class Validator {
         errorCode: errCodeMap.fieldsInvalid,
         payload: invalidFields,
       };
+
+    return;
+  }
+
+  public static validateGetTrainsReqBodyData(data: GetTrainsReqBody, apikey: string) {
+    // const fieldsToValidate = [Constants.API_KEY, Constants.START_STATION, Constants.STOP_STATION, Constants.TRAVEL_DATE];
+    const { startStation, stopStation, travelDate } = data;
+    const invalidFields: string[] = [];
+
+    if (!startStation) invalidFields.push(Constants.START_STATION);
+    if (!stopStation) invalidFields.push(Constants.STOP_STATION);
+    if (!travelDate) invalidFields.push(Constants.TRAVEL_DATE);
+    if (!apikey) invalidFields.push(Constants.API_KEY);
+
+    if (invalidFields.length > 0)
+      throw { errorCode: errCodeMap.fieldsInvalid, payload: invalidFields };
 
     return;
   }

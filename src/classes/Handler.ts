@@ -10,6 +10,7 @@ import login from "../utils/AuthRelated/login";
 import logout from "../utils/AuthRelated/logout";
 import replaceTokens from "../utils/AuthRelated/replaceTokens";
 import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
+import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
 
 export default class Handler {
   public startLoader: () => void;
@@ -277,6 +278,22 @@ export default class Handler {
             logout({ setIsAuthenticated });
           }
         }
+      });
+    }
+  }
+
+  public async handleGettingTrainList(data_: GetTrainsReqBody, apikey: string) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.post(`/api/get_trains?key=${apikey}`, data_);
+      console.log(`Response for getting trains: `, data);
+      this.endLoader();
+
+      return data;
+    } catch (err: any) {
+      this.handleError(err, (errstatus?: number) => {
+        this.endLoader();
+        throw errstatus;
       });
     }
   }
