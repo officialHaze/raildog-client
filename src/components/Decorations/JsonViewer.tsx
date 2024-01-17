@@ -28,15 +28,32 @@ function syntaxHighlight(json: JSON | string) {
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   json: JSON | string;
-  status: string | number;
+  status: number;
+  statusText: string;
 }
 
-export default function JsonViewer({ json, status, className }: Props) {
+export default function JsonViewer({ json, status, statusText, className }: Props) {
   return (
-    <div className={`${className}`}>
-      <div className="header bg-yellow-500">this is the header</div>
+    <div className={`${className} overflow-hidden rounded-xl white-border-all`}>
+      <div className="header flex justify-between px-4 py-2 bg-[#353941] white-border">
+        <p>
+          Status:{" "}
+          {!isNaN(status) && (
+            <span
+              className={`${
+                !isNaN(status) && status < 400 ? "bg-green-500" : "bg-red-500"
+              } px-2 rounded-md`}
+            >
+              {status}
+            </span>
+          )}
+        </p>
+        <p className={`${!isNaN(status) && status < 400 ? "text-green-500" : "text-red-500"}`}>
+          {statusText}
+        </p>
+      </div>
       <pre
-        className="w-full px-4 h-[33rem] overflow-auto"
+        className="w-full p-4 h-[33rem] overflow-auto bg-[#0C2233]"
         dangerouslySetInnerHTML={{
           __html: syntaxHighlight(json),
         }}

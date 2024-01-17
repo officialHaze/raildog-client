@@ -8,10 +8,14 @@ import { useLoader } from "../../../utils/customHooks";
 import Loader from "../../Loader/Loader";
 import { PopupContext } from "../../../App";
 import JsonViewer from "../../Decorations/JsonViewer";
+import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 
 interface GetTrainsResponse {
   message: string;
   available_trains: any[];
+}
+interface ErrorResponse {
+  error: string;
 }
 
 export default function RaildogAPIContent() {
@@ -24,10 +28,11 @@ export default function RaildogAPIContent() {
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { startLoader, endLoader, isRunning: isLoaderRunning } = useLoader();
   const setPopup = useContext(PopupContext);
-  const [response, setResponse] = useState<GetTrainsResponse>({
+  const [response, setResponse] = useState<GetTrainsResponse | ErrorResponse>({
     message: "",
     available_trains: [],
   });
+  const [resStatusObj, setResStatusObj] = useState<ResponseStatusObj | null>(null);
 
   if (!setPopup) throw new Error("Popup ctx value is null!");
 
@@ -93,13 +98,25 @@ export default function RaildogAPIContent() {
 
       const handler = new Handler(startLoader, endLoader, setPopup);
       const res = await handler.handleGettingTrainList(requestBody, apikey);
-      setResponse(res);
+      setResponse(res?.data);
+      setResStatusObj({
+        status: res?.status ?? NaN,
+        statusText: res?.statusText ?? "",
+      });
     } catch (err: any) {
       console.error(err);
       if (err.errorCode && err.payload) {
         const invalidFields: string[] = err.payload;
         setInvalidFields(invalidFields);
       }
+      // Display any error on the json viewer as well
+      setResponse({
+        error: err?.response?.data?.Error?.message ?? "Some error occurred!",
+      });
+      setResStatusObj({
+        status: err?.response?.status ?? NaN,
+        statusText: err?.response?.statusText ?? "",
+      });
     }
   };
 
@@ -119,7 +136,7 @@ export default function RaildogAPIContent() {
       </div>
 
       <div className="para text-lg px-4 py-4 flex flex-col gap-4">
-        <p>Get list of trains for a given time period.</p>
+        <p>Get a list of trains for a given time period.</p>
         <p>
           <span className="font-bold">Required</span> : API Key.
         </p>
@@ -130,7 +147,7 @@ export default function RaildogAPIContent() {
           <span className="font-bold">Required</span> : stopStation (destination).
         </p>
         <p>
-          <span className="font-bold">Required</span> : travelDate (YYYYMMDD).
+          <span className="font-bold">Not Required</span> : travelDate (YYYYMMDD).
         </p>
 
         <div className="flex w-full items-center py-4 gap-2">
@@ -209,7 +226,6 @@ export default function RaildogAPIContent() {
                     "outline-red-500 focus:outline-red-500"
                   }`}
                 />
-                <em className="text-sm">*Required</em>
               </div>
             </div>
 
@@ -223,7 +239,12 @@ export default function RaildogAPIContent() {
             </div>
           </form>
 
-          <JsonViewer className="w-[50%]" json={JSON.stringify(response, null, 2)} status={200} />
+          <JsonViewer
+            className="w-[50%]"
+            json={JSON.stringify(response, null, 2)}
+            status={resStatusObj?.status ?? NaN}
+            statusText={resStatusObj?.statusText ?? ""}
+          />
         </div>
       </div>
     </div>

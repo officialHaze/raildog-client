@@ -15,8 +15,16 @@
     @apply border-r-[1px] border-r-[#373A40];
   }
 
+  .white-border-l {
+    @apply border-l-[1px] border-l-[#373A40];
+  }
+
   .white-border-t {
     @apply border-t-[1px] border-t-[#373A40];
+  }
+
+  .white-border-all {
+    @apply border-[1px] border-[#373A40];
   }
 
   .input-icon {

@@ -285,15 +285,15 @@ export default class Handler {
   public async handleGettingTrainList(data_: GetTrainsReqBody, apikey: string) {
     try {
       this.startLoader();
-      const { data } = await axiosInstance.post(`/api/get_trains?key=${apikey}`, data_);
-      console.log(`Response for getting trains: `, data);
+      const res = await axiosInstance.post(`/api/get_trains?key=${apikey}`, data_);
+      console.log(`Response for getting trains: `, res);
       this.endLoader();
 
-      return data;
+      return res;
     } catch (err: any) {
       this.handleError(err, (errstatus?: number) => {
         this.endLoader();
-        throw errstatus;
+        throw err;
       });
     }
   }
@@ -318,7 +318,7 @@ export default class Handler {
     } else if (err.response) {
       const errstatus = err.response.status;
 
-      const errmsg = err.response.data.Error;
+      const errmsg = err.response.data.Error.message ?? err.response.data.Error;
 
       if (errstatus === 401) {
         return callback(errstatus);
