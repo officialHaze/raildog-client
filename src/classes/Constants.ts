@@ -4,6 +4,10 @@ export default class Constants {
   public static MODAL = "MODAL";
   public static REFRESH_TOKEN = "refresh_token";
   public static ACCESS_TOKEN = "access_token";
+  public static START_STATION = "START_STATION";
+  public static STOP_STATION = "STOP_STATION";
+  public static TRAVEL_DATE = "TRAVEL_DATE";
+  public static API_KEY = "API_KEY";
 }
 
 export class ModalTypes extends Constants {

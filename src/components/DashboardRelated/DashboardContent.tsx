@@ -1,4 +1,5 @@
 import APIKeysContent from "./APIKeysRelated/APIKeysContent";
+import RaildogAPIContent from "./RaildogAPIRelated/RaildogAPIContent";
 
 interface Props {
   selectedOpt: string;
@@ -6,6 +7,7 @@ interface Props {
 
 const contentMap: any = {
   API_KEYS: <APIKeysContent />,
+  RAILDOG_API: <RaildogAPIContent />,
 };
 
 export default function DashboardContent({ selectedOpt }: Props) {

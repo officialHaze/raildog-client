@@ -10,6 +10,7 @@ import login from "../utils/AuthRelated/login";
 import logout from "../utils/AuthRelated/logout";
 import replaceTokens from "../utils/AuthRelated/replaceTokens";
 import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
+import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
 
 export default class Handler {
   public startLoader: () => void;
@@ -281,6 +282,22 @@ export default class Handler {
     }
   }
 
+  public async handleGettingTrainList(data_: GetTrainsReqBody, apikey: string) {
+    try {
+      this.startLoader();
+      const res = await axiosInstance.post(`/api/get_trains?key=${apikey}`, data_);
+      console.log(`Response for getting trains: `, res);
+      this.endLoader();
+
+      return res;
+    } catch (err: any) {
+      this.handleError(err, (errstatus?: number) => {
+        this.endLoader();
+        throw err;
+      });
+    }
+  }
+
   public handleError(err: any, callback: (errStatus?: number) => void) {
     console.log(err);
 
@@ -301,7 +318,7 @@ export default class Handler {
     } else if (err.response) {
       const errstatus = err.response.status;
 
-      const errmsg = err.response.data.Error;
+      const errmsg = err.response.data.Error.message ?? err.response.data.Error;
 
       if (errstatus === 401) {
         return callback(errstatus);

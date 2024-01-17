@@ -13,13 +13,13 @@ const sidePanelOptions = [
     suboptions: [
       {
         name: "Find Trains",
-        reqMethod: "GET",
+        reqMethod: "POST",
         id: SidePanelOptionsId.RAILDOG_SUB_SNIFF_TRAINS,
       },
 
       {
-        name: "Get Live Status",
-        reqMethod: "GET",
+        name: "Live Status",
+        reqMethod: "POST",
         id: SidePanelOptionsId.RAILDOG_SUB_SNIFF_LIVE_STATUS,
       },
     ],
