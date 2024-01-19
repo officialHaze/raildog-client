@@ -1,5 +1,5 @@
 // import RegistrationData from "../interfaces/RegistrationData";
-import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
+import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import errCodeMap from "../json/errorCodeMappings.json";
 import Constants from "./Constants";
 

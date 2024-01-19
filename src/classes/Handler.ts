@@ -10,7 +10,7 @@ import login from "../utils/AuthRelated/login";
 import logout from "../utils/AuthRelated/logout";
 import replaceTokens from "../utils/AuthRelated/replaceTokens";
 import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
-import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
+import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 
 export default class Handler {
   public startLoader: () => void;
