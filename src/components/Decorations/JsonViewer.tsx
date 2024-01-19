@@ -53,7 +53,7 @@ export default function JsonViewer({ json, status, statusText, className }: Prop
         </p>
       </div>
       <pre
-        className="w-full p-4 h-[33rem] overflow-auto bg-[#0C2233]"
+        className="w-full p-4 h-[33rem] overflow-auto bg-[#0C2233] break-words"
         dangerouslySetInnerHTML={{
           __html: syntaxHighlight(json),
         }}

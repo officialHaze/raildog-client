@@ -45,8 +45,10 @@ export default function LiveStatusAPI({
           <span className="font-bold">Required</span> : API Key.
         </p>
         <p>
-          <span className="font-bold">Required</span> : phpsessid (leave empty to trigger
-          authentication and receive a new ID).
+          <span className="font-bold">
+            <em>Preffered</em>
+          </span>{" "}
+          : phpsessid (leave empty to trigger authentication).
         </p>
         <p>
           <span className="font-bold">Required</span> : train_no.
@@ -104,7 +106,7 @@ export default function LiveStatusAPI({
                     "outline-red-500 focus:outline-red-500"
                   }`}
                 />
-                <em className="text-sm">*Required</em>
+                {/* <em className="text-sm">*Required</em> */}
               </div>
             </div>
 
