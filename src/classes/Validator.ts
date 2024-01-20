@@ -1,5 +1,6 @@
 // import RegistrationData from "../interfaces/RegistrationData";
-import GetTrainsReqBody from "../interfaces/GetTrainsReqBody";
+import GetLiveStatusReqBody from "../interfaces/states/GetLiveStatusReqBody";
+import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import errCodeMap from "../json/errorCodeMappings.json";
 import Constants from "./Constants";
 
@@ -50,6 +51,22 @@ export default class Validator {
 
     if (!startStation) invalidFields.push(Constants.START_STATION);
     if (!stopStation) invalidFields.push(Constants.STOP_STATION);
+    if (!apikey) invalidFields.push(Constants.API_KEY);
+
+    if (invalidFields.length > 0)
+      throw { errorCode: errCodeMap.fieldsInvalid, payload: invalidFields };
+
+    return;
+  }
+
+  public static validateLiveStatusReqBody(data: GetLiveStatusReqBody, apikey: string) {
+    const { train_name, train_no, at_stn, date } = data;
+    const invalidFields: string[] = [];
+
+    if (!train_name) invalidFields.push(Constants.TRAIN_NAME);
+    if (!train_no) invalidFields.push(Constants.TRAIN_NO);
+    if (!at_stn) invalidFields.push(Constants.AT_STN);
+    if (!date) invalidFields.push(Constants.DATE);
     if (!apikey) invalidFields.push(Constants.API_KEY);
 
     if (invalidFields.length > 0)

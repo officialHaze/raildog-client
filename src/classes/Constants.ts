@@ -8,6 +8,16 @@ export default class Constants {
   public static STOP_STATION = "STOP_STATION";
   public static TRAVEL_DATE = "TRAVEL_DATE";
   public static API_KEY = "API_KEY";
+
+  // Live status related
+  public static PHPSESSID = "PHPSESSID";
+  public static TRAIN_NO = "TRAIN_NO";
+  public static TRAIN_NAME = "TRAIN_NAME";
+  public static AT_STN = "AT_STN";
+  public static DATE = "DATE";
+
+  public static GET_TRAINS = "GET_TRAINS";
+  public static GET_LIVE_STATUS = "GET_LIVE_STATUS";
 }
 
 export class ModalTypes extends Constants {
