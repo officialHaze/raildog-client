@@ -145,7 +145,7 @@ export default function FindTrainsAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
-        <StatusChart apiName={Constants.GET_TRAINS} />
+        <StatusChart />
       </div>
     </>
   );
