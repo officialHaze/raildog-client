@@ -40,15 +40,9 @@ export default function LiveStatusAPI({
       </div>
 
       <div className="para text-lg px-4 py-4 flex flex-col gap-4">
-        <p>Get live status of a particular train</p>
+        <p>Get live status of a train</p>
         <p>
           <span className="font-bold">Required</span> : API Key.
-        </p>
-        <p>
-          <span className="font-bold">
-            <em>Preffered</em>
-          </span>{" "}
-          : phpsessid (leave empty to trigger authentication).
         </p>
         <p>
           <span className="font-bold">Required</span> : train_no.
@@ -61,6 +55,12 @@ export default function LiveStatusAPI({
         </p>
         <p>
           <span className="font-bold">Required</span> : date (DD-MM-YYYY).
+        </p>
+        <p>
+          <span className="font-bold">
+            <em>Preffered</em>
+          </span>{" "}
+          : phpsessid (leave empty to trigger authentication).
         </p>
 
         <div className="flex w-full items-center py-4 gap-2">
@@ -90,23 +90,6 @@ export default function LiveStatusAPI({
                   }`}
                 />
                 <em className="text-sm">*Required</em>
-              </div>
-            </div>
-
-            <div className="flex w-full items-start gap-4">
-              <p className="w-[20%]">phpsessid: </p>
-              <div className="w-[80%]">
-                <input
-                  id={Constants.PHPSESSID}
-                  value={requestBody.phpsessid}
-                  onChange={handleChange}
-                  autoComplete="off"
-                  className={`${
-                    invalidFields.includes(Constants.PHPSESSID) &&
-                    "outline-red-500 focus:outline-red-500"
-                  }`}
-                />
-                {/* <em className="text-sm">*Required</em> */}
               </div>
             </div>
 
@@ -175,6 +158,23 @@ export default function LiveStatusAPI({
                   }`}
                 />
                 <em className="text-sm">*Required</em>
+              </div>
+            </div>
+
+            <div className="flex w-full items-start gap-4">
+              <p className="w-[20%]">phpsessid: </p>
+              <div className="w-[80%]">
+                <input
+                  id={Constants.PHPSESSID}
+                  value={requestBody.phpsessid}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  className={`${
+                    invalidFields.includes(Constants.PHPSESSID) &&
+                    "outline-red-500 focus:outline-red-500"
+                  }`}
+                />
+                {/* <em className="text-sm">*Required</em> */}
               </div>
             </div>
 
