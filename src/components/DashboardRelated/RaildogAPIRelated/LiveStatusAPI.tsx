@@ -3,11 +3,13 @@ import GetLiveStatusReqBody from "../../../interfaces/states/GetLiveStatusReqBod
 import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 import JsonViewer from "../../Decorations/JsonViewer";
 import Loader from "../../Loader/Loader";
+import LiveStatus403ResponseCol from "./LiveStatus403ResponseCol";
 import {
   ErrorResponse,
   GetLiveStatusAuthResponse,
   GetLiveStatusSuccessResponse,
 } from "./RaildogAPIContent";
+import StatusChart from "./StatusChart";
 
 export interface LiveStatusAPICompProps {
   invalidFields: string[];
@@ -195,6 +197,7 @@ export default function LiveStatusAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
+        <StatusChart column={<LiveStatus403ResponseCol />} />
       </div>
     </>
   );
