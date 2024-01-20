@@ -4,6 +4,7 @@ import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 import JsonViewer from "../../Decorations/JsonViewer";
 import Loader from "../../Loader/Loader";
 import { ErrorResponse, GetTrainsResponse } from "./RaildogAPIContent";
+import StatusChart from "./StatusChart";
 
 export interface FindTrainsAPICompProps {
   invalidFields: string[];
@@ -144,6 +145,7 @@ export default function FindTrainsAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
+        <StatusChart apiName={Constants.GET_TRAINS} />
       </div>
     </>
   );
