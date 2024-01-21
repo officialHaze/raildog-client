@@ -5,7 +5,7 @@ export default interface LiveStatusAuthData {
   captchaDataUrl: string;
 }
 
-interface CaptchaOption {
+export interface CaptchaOption {
   captchaCode: string;
   captchaCodeIdx: number;
 }

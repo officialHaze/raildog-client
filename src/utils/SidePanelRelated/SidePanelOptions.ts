@@ -22,6 +22,12 @@ const sidePanelOptions = [
         reqMethod: "POST",
         id: SidePanelOptionsId.RAILDOG_SUB_SNIFF_LIVE_STATUS,
       },
+
+      {
+        name: "Bypass Captcha",
+        reqMethod: "POST",
+        id: SidePanelOptionsId.RAILDOG_SUB_BYPASS_CAPTCHA,
+      },
     ],
   },
 

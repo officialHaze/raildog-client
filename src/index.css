@@ -39,11 +39,16 @@
     @apply text-2xl font-bold;
   }
 
+  p {
+    @apply break-words;
+  }
+
   button {
     @apply text-lg;
   }
 
-  input {
+  input,
+  textarea {
     @apply focus:outline-blue-500 outline outline-1 outline-slate-400 w-full px-4 py-2 rounded-lg bg-github-black-primary;
   }
 
