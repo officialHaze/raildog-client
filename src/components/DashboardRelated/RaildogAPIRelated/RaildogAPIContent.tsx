@@ -12,6 +12,8 @@ import GetLiveStatusReqBody from "../../../interfaces/states/GetLiveStatusReqBod
 import LiveStatusAPI, { LiveStatusAPICompProps } from "./LiveStatusAPI";
 import LiveStatusData from "../../../interfaces/LiveStatusData";
 import LiveStatusAuthData from "../../../interfaces/LiveStatusAuthData";
+import BypassCaptchaAPI, { BypassCaptchaAPICompProps } from "./BypassCaptchaAPI";
+import BypassCaptchaReqBody from "../../../interfaces/states/BypassCaptchaReqBody";
 
 export interface GetTrainsResponse {
   message: string;
@@ -26,12 +28,18 @@ export interface GetLiveStatusAuthResponse {
   message: LiveStatusAuthData;
 }
 
+export interface BypassCaptchaResponse {
+  message: string;
+  phpsessid: string;
+}
+
 export interface ErrorResponse {
   error: string;
 }
 
 export default function RaildogAPIContent() {
   const [apikey, setApikey] = useState("{API_KEY}");
+
   const [getTrainsRequestBody, setGetTrainsRequestBody] = useState<GetTrainsReqBody>({
     startStation: "",
     stopStation: "",
@@ -44,6 +52,13 @@ export default function RaildogAPIContent() {
     at_stn: "",
     date: "",
   });
+  const [bypassCaptchaReqBody, setBypassCaptchaReqBody] = useState<BypassCaptchaReqBody>({
+    phpsessid: "",
+    captchaCode: "",
+    sD: "",
+    captchaOptions: [],
+  });
+
   const [getTrainsresponse, setGetTrainsResponse] = useState<GetTrainsResponse | ErrorResponse>({
     message: "",
     available_trains: [],
@@ -51,15 +66,25 @@ export default function RaildogAPIContent() {
   const [liveStatusResponse, setLiveStatusResponse] = useState<
     GetLiveStatusSuccessResponse | GetLiveStatusAuthResponse | ErrorResponse | null
   >(null);
+  const [bypassCaptchaResponse, setBypassCaptchaResponse] = useState<
+    BypassCaptchaResponse | ErrorResponse
+  >({
+    message: "",
+    phpsessid: "",
+  });
+
   const [invalidFields, setInvalidFields] = useState<string[]>([]);
   const { startLoader, endLoader, isRunning: isLoaderRunning } = useLoader();
   const setPopup = useContext(PopupContext);
+
   const [getTrainsResStatusObj, setGetTrainsResStatusObj] = useState<ResponseStatusObj | null>(
     null
   );
   const [liveStatusResStatusObj, setLiveStatusResStatusObj] = useState<ResponseStatusObj | null>(
     null
   );
+  const [bypassCaptchaResStatusObj, setBypassCaptchaResStatusObj] =
+    useState<ResponseStatusObj | null>(null);
 
   if (!setPopup) throw new Error("Popup ctx value is null!");
 
@@ -71,7 +96,7 @@ export default function RaildogAPIContent() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id: type, value } = e.currentTarget;
 
     switch (type) {
@@ -162,6 +187,47 @@ export default function RaildogAPIContent() {
         });
         break;
 
+      // Bypass captcha related
+      case Constants.CAPTCHA_CODE:
+        // Remove any pre-loaded error
+        removeError(Constants.CAPTCHA_CODE);
+
+        setBypassCaptchaReqBody({
+          ...bypassCaptchaReqBody,
+          captchaCode: value,
+        });
+        break;
+
+      case Constants.SD:
+        // Remove any pre-loaded error
+        removeError(Constants.SD);
+
+        setBypassCaptchaReqBody({
+          ...bypassCaptchaReqBody,
+          sD: value,
+        });
+        break;
+
+      case Constants.BYPASS_CAPTCHA_PHPSESSID:
+        // Remove any pre-loaded error
+        removeError(Constants.BYPASS_CAPTCHA_PHPSESSID);
+
+        setBypassCaptchaReqBody({
+          ...bypassCaptchaReqBody,
+          phpsessid: value,
+        });
+        break;
+
+      // case Constants.CAPTCHA_OPTIONS:
+      //   // Remove any pre-loaded error
+      //   removeError(Constants.CAPTCHA_OPTIONS);
+
+      //   setBypassCaptchaReqBody({
+      //     ...bypassCaptchaReqBody,
+      //     captchaOptions: value,
+      //   });
+      //   break;
+
       default:
         break;
     }
@@ -228,12 +294,20 @@ export default function RaildogAPIContent() {
           break;
 
         case Constants.GET_LIVE_STATUS:
-          if (err?.response?.status === 403)
+          if (err?.response?.status === 403) {
             setLiveStatusResponse({
               error: "Auth triggered!",
               message: err?.response?.data?.message,
             });
-          else
+
+            // Set the captcha options value in bypass captcha api
+            setBypassCaptchaReqBody({
+              ...bypassCaptchaReqBody,
+              captchaOptions: err?.response?.data?.message?.captchaOptions,
+              sD: err?.response?.data?.message?.sD,
+              phpsessid: err?.response?.data?.message?.phpsessid,
+            });
+          } else
             setLiveStatusResponse({
               error: err?.response?.data?.Error?.message ?? "Some error occurred!",
             });
@@ -273,6 +347,17 @@ export default function RaildogAPIContent() {
     resStatusObj: liveStatusResStatusObj,
   };
 
+  const bypassCaptchaCompProps: BypassCaptchaAPICompProps = {
+    invalidFields,
+    isLoaderRunning,
+    handleChange,
+    handleSubmit,
+    apikey,
+    response: bypassCaptchaResponse,
+    requestBody: bypassCaptchaReqBody,
+    resStatusObj: bypassCaptchaResStatusObj,
+  };
+
   return (
     <div className="px-14 py-8">
       <div className="header p-4 white-border">
@@ -287,6 +372,7 @@ export default function RaildogAPIContent() {
       <div className="flex flex-col gap-4">
         <FindTrainsAPI {...findTrainsCompProps} />
         <LiveStatusAPI {...liveStatusCompProps} />
+        <BypassCaptchaAPI {...bypassCaptchaCompProps} />
       </div>
     </div>
   );

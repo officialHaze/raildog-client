@@ -16,8 +16,15 @@ export default class Constants {
   public static AT_STN = "AT_STN";
   public static DATE = "DATE";
 
+  // Bypass captcha related
+  public static CAPTCHA_CODE = "CAPTCHA_CODE";
+  public static SD = "SD";
+  public static CAPTCHA_OPTIONS = "CAPTCHA_OPTIONS";
+  public static BYPASS_CAPTCHA_PHPSESSID = "BYPASS_CAPTCHA_PHPSESSID";
+
   public static GET_TRAINS = "GET_TRAINS";
   public static GET_LIVE_STATUS = "GET_LIVE_STATUS";
+  public static BYPASS_CAPTCHA = "BYPASS_CAPTCHA";
 }
 
 export class ModalTypes extends Constants {
@@ -76,4 +83,5 @@ export class SidePanelOptionsId {
   // Sub options id
   public static RAILDOG_SUB_SNIFF_TRAINS = "RAILDOG_SUB_SNIFF_TRAINS";
   public static RAILDOG_SUB_SNIFF_LIVE_STATUS = "RAILDOG_SUB_SNIFF_LIVE_STATUS";
+  public static RAILDOG_SUB_BYPASS_CAPTCHA = "RAILDOG_SUB_BYPASS_CAPTCHA";
 }
