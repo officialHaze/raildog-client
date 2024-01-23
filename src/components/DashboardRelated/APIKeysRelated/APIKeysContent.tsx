@@ -51,7 +51,7 @@ export default function APIKeysContent() {
   };
 
   return (
-    <div className="px-14 py-8">
+    <div className="px-4 md:px-14 py-8">
       <div className="header px-4 py-4 white-border">
         <h1>API Keys</h1>
       </div>
@@ -83,7 +83,7 @@ export default function APIKeysContent() {
           )}
         </div>
         <button
-          className="py-2 px-4 my-4 w-[15%] bg-blue-500 rounded-lg hover:bg-blue-400"
+          className="py-2 px-4 my-4 w-full xl:w-[15%] md:w-[25%] sm:w-[30%] bg-blue-500 rounded-lg hover:bg-blue-400"
           onClick={handleClick}
           disabled={isLoaderRunning}
         >

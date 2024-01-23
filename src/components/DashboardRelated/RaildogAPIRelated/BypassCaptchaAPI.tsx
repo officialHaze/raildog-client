@@ -3,7 +3,8 @@ import BypassCaptchaReqBody from "../../../interfaces/states/BypassCaptchaReqBod
 import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 import isEmptyList from "../../../utils/isEmptyList";
 import JsonViewer from "../../Decorations/JsonViewer";
-import Loader from "../../Loader/Loader";
+import APIEndpoint from "./APIEndpoint";
+import GetResponseBtn from "./GetResponseBtn";
 import { BypassCaptchaResponse, ErrorResponse } from "./RaildogAPIContent";
 import StatusChart from "./StatusChart";
 
@@ -29,7 +30,7 @@ export default function BypassCaptchaAPI({
   apikey,
 }: BypassCaptchaAPICompProps) {
   return (
-    <>
+    <div>
       <div id={SidePanelOptionsId.RAILDOG_SUB_BYPASS_CAPTCHA} className="header p-4 white-border">
         <h1>Bypass Captcha</h1>
       </div>
@@ -58,17 +59,12 @@ export default function BypassCaptchaAPI({
           response).
         </p>
 
-        <div className="flex w-full items-center py-4 gap-2">
-          <p className="w-[10%]">API Endpoint: </p>
-          <div>
-            <em className="font-bold">{`${process.env.REACT_APP_API_ENDPOINT}/api/get_live_status?key=${apikey}`}</em>
-          </div>
-        </div>
+        <APIEndpoint apikey={apikey} />
 
-        <div className="flex justify-between py-6">
+        <div className="flex flex-col xl:flex-row justify-between py-6">
           <form
             id={Constants.BYPASS_CAPTCHA}
-            className="required-fields flex flex-col gap-8 pr-20 w-[50%]"
+            className="required-fields flex flex-col gap-8 pr-0 xl:pr-20 w-full xl:w-[50%]"
             onSubmit={handleSubmit}
           >
             <div className="flex w-full items-start gap-4">
@@ -159,19 +155,11 @@ export default function BypassCaptchaAPI({
                 </em>
               </div>
             </div>
-
-            <div className="py-4">
-              <button
-                type="submit"
-                className="py-2 px-4 bg-blue-500 hover:bg-blue-400 rounded-md w-[30%]"
-              >
-                {isLoaderRunning ? <Loader /> : "Get Response"}
-              </button>
-            </div>
+            <GetResponseBtn isLoaderRunning={isLoaderRunning} />
           </form>
 
           <JsonViewer
-            className="w-[50%] h-full"
+            className="w-full xl:w-[50%]"
             json={JSON.stringify(response, null, 2)}
             status={resStatusObj?.status ?? NaN}
             statusText={resStatusObj?.statusText ?? ""}
@@ -179,6 +167,6 @@ export default function BypassCaptchaAPI({
         </div>
         <StatusChart />
       </div>
-    </>
+    </div>
   );
 }

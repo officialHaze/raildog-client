@@ -376,7 +376,7 @@ export default function RaildogAPIContent() {
   };
 
   return (
-    <div className="px-14 py-8">
+    <div className="px-4 md:px-14 py-8">
       <div className="header p-4 white-border">
         <h1>Raildog API</h1>
       </div>

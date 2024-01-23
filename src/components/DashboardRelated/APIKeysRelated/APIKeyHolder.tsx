@@ -84,7 +84,7 @@ export default function APIKeyHolder({
 
   return (
     <div
-      className={`font-['Dosis', sans-serif] py-2 px-4 w-[34%] bg-slate-600 my-6 rounded-lg flex items-center justify-between ${
+      className={`font-['Dosis', sans-serif] py-2 px-4 w-full xl:w-[34%] md:w-[60%] sm:w-[75%] bg-slate-600 my-6 rounded-lg flex items-center justify-between ${
         !isEnabled && "opacity-40"
       }`}
     >
