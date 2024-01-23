@@ -271,6 +271,23 @@ export default function RaildogAPIContent() {
           });
           break;
 
+        case Constants.BYPASS_CAPTCHA:
+          // Validate if all required fields are present
+          Validator.validateBypassCaptchaReqBody(
+            bypassCaptchaReqBody,
+            !apikey.includes("{") ? apikey : ""
+          );
+          const bypassCaptchaRes = await handler.handleCaptchaBypassing(
+            bypassCaptchaReqBody,
+            apikey
+          );
+          setBypassCaptchaResponse(bypassCaptchaRes?.data);
+          setBypassCaptchaResStatusObj({
+            status: bypassCaptchaRes?.status ?? NaN,
+            statusText: bypassCaptchaRes?.statusText ?? "",
+          });
+          break;
+
         default:
           break;
       }

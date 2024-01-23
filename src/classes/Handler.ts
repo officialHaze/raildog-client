@@ -12,6 +12,7 @@ import replaceTokens from "../utils/AuthRelated/replaceTokens";
 import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
 import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import GetLiveStatusReqBody from "../interfaces/states/GetLiveStatusReqBody";
+import BypassCaptchaReqBody from "../interfaces/states/BypassCaptchaReqBody";
 
 export default class Handler {
   public startLoader: () => void;
@@ -307,6 +308,22 @@ export default class Handler {
       console.log(`Live status response: `, res);
       this.endLoader();
 
+      return res;
+    } catch (err: any) {
+      this.handleError(err, (errstatus?: number) => {
+        this.endLoader();
+        throw err;
+      });
+    }
+  }
+
+  // Handle calling the bypass captcha api
+  public async handleCaptchaBypassing(data_: BypassCaptchaReqBody, apikey: string) {
+    try {
+      this.startLoader();
+      const res = await axiosInstance.post(`/api/bypass_captcha?key=${apikey}`, data_);
+      console.log("Bypass captcha response: ", res);
+      this.endLoader();
       return res;
     } catch (err: any) {
       this.handleError(err, (errstatus?: number) => {
