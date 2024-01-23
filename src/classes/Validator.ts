@@ -1,4 +1,5 @@
 // import RegistrationData from "../interfaces/RegistrationData";
+import BypassCaptchaReqBody from "../interfaces/states/BypassCaptchaReqBody";
 import GetLiveStatusReqBody from "../interfaces/states/GetLiveStatusReqBody";
 import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import errCodeMap from "../json/errorCodeMappings.json";
@@ -67,6 +68,22 @@ export default class Validator {
     if (!train_no) invalidFields.push(Constants.TRAIN_NO);
     if (!at_stn) invalidFields.push(Constants.AT_STN);
     if (!date) invalidFields.push(Constants.DATE);
+    if (!apikey) invalidFields.push(Constants.API_KEY);
+
+    if (invalidFields.length > 0)
+      throw { errorCode: errCodeMap.fieldsInvalid, payload: invalidFields };
+
+    return;
+  }
+
+  public static validateBypassCaptchaReqBody(data: BypassCaptchaReqBody, apikey: string) {
+    const { captchaCode, captchaOptions, sD, phpsessid } = data;
+    const invalidFields: string[] = [];
+
+    if (!captchaCode) invalidFields.push(Constants.CAPTCHA_CODE);
+    if (captchaOptions.length <= 0) invalidFields.push(Constants.CAPTCHA_OPTIONS);
+    if (!sD) invalidFields.push(Constants.SD);
+    if (!phpsessid) invalidFields.push(Constants.BYPASS_CAPTCHA_PHPSESSID);
     if (!apikey) invalidFields.push(Constants.API_KEY);
 
     if (invalidFields.length > 0)
