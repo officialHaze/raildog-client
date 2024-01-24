@@ -6,13 +6,17 @@ import { RiLogoutCircleLine } from "react-icons/ri";
 import sidePanelOptions from "../../utils/SidePanelRelated/SidePanelOptions";
 import SidePanelOption from "./SidePanelOption";
 
-export default function SidePanel() {
+interface Props extends React.HTMLAttributes<HTMLElement> {}
+
+export default function SidePanel(props: Props) {
   const setIsAuthenticated = useContext(AuthContext);
 
   if (!setIsAuthenticated) throw new Error("Auth context value is null");
 
   return (
-    <div className="text-white bg-github-black-secondary h-full w-[15%] white-border-r">
+    <div
+      className={`${props.className} text-white bg-github-black-secondary h-full w-[15%] white-border-r`}
+    >
       <div className="header h-[17%] py-6 px-6 flex flex-col items-center gap-2 white-border">
         <FaUserAstronaut className="text-4xl" />
         <h2>Moinak Dey</h2>

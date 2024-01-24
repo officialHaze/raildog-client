@@ -2,7 +2,8 @@ import Constants, { SidePanelOptionsId } from "../../../classes/Constants";
 import GetLiveStatusReqBody from "../../../interfaces/states/GetLiveStatusReqBody";
 import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 import JsonViewer from "../../Decorations/JsonViewer";
-import Loader from "../../Loader/Loader";
+import APIEndpoint from "./APIEndpoint";
+import GetResponseBtn from "./GetResponseBtn";
 import LiveStatus403ResponseCol from "./LiveStatus403ResponseCol";
 import {
   ErrorResponse,
@@ -33,7 +34,7 @@ export default function LiveStatusAPI({
   isLoaderRunning,
 }: LiveStatusAPICompProps) {
   return (
-    <>
+    <div>
       <div
         id={SidePanelOptionsId.RAILDOG_SUB_SNIFF_LIVE_STATUS}
         className="header p-4 white-border"
@@ -65,17 +66,12 @@ export default function LiveStatusAPI({
           : phpsessid (leave empty to trigger authentication).
         </p>
 
-        <div className="flex w-full items-center py-4 gap-2">
-          <p className="w-[10%]">API Endpoint: </p>
-          <div>
-            <em className="font-bold">{`${process.env.REACT_APP_API_ENDPOINT}/api/get_live_status?key=${apikey}`}</em>
-          </div>
-        </div>
+        <APIEndpoint apikey={apikey} />
 
-        <div className="flex justify-between py-6">
+        <div className="flex flex-col xl:flex-row justify-between py-6">
           <form
             id={Constants.GET_LIVE_STATUS}
-            className="required-fields flex flex-col gap-8 pr-20 w-[50%]"
+            className="required-fields flex flex-col gap-8 pr-0 xl:pr-20 w-full xl:w-[50%]"
             onSubmit={handleSubmit}
           >
             <div className="flex w-full items-start gap-4">
@@ -179,19 +175,11 @@ export default function LiveStatusAPI({
                 {/* <em className="text-sm">*Required</em> */}
               </div>
             </div>
-
-            <div className="py-4">
-              <button
-                type="submit"
-                className="py-2 px-4 bg-blue-500 hover:bg-blue-400 rounded-md w-[30%]"
-              >
-                {isLoaderRunning ? <Loader /> : "Get Response"}
-              </button>
-            </div>
+            <GetResponseBtn isLoaderRunning={isLoaderRunning} />
           </form>
 
           <JsonViewer
-            className="w-[50%] h-full"
+            className="w-full xl:w-[50%]"
             json={JSON.stringify(response, null, 2)}
             status={resStatusObj?.status ?? NaN}
             statusText={resStatusObj?.statusText ?? ""}
@@ -199,6 +187,6 @@ export default function LiveStatusAPI({
         </div>
         <StatusChart column={<LiveStatus403ResponseCol />} />
       </div>
-    </>
+    </div>
   );
 }

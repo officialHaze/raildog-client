@@ -8,7 +8,7 @@ export default function StatusChart({ column }: Props) {
   return (
     <>
       <div className="py-4 px-2 white-border">
-        <h2>What does the response mean?</h2>
+        <h2>Response status and their meaning</h2>
       </div>
       <table className="table-fixed border-separate border-spacing-2">
         <thead>

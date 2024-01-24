@@ -15,7 +15,7 @@ export default function Dashboard() {
   return (
     <div className="flex h-screen">
       <SideOptionSelectCtx.Provider value={{ isSelected, setIsSelected }}>
-        <SidePanel />
+        <SidePanel className="hidden lg:block" />
         <DashboardContent selectedOpt={isSelected} />
       </SideOptionSelectCtx.Provider>
     </div>
