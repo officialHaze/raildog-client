@@ -142,7 +142,7 @@ export default function BypassCaptchaAPI({
 
             <div className="flex w-full items-start gap-4">
               <p className="w-[20%]">captchaOptions: </p>
-              <div className="w-[80%]">
+              <div className="w-[80%] max-h-[10rem] overflow-auto p-2">
                 {!isEmptyList(requestBody.captchaOptions) ? (
                   requestBody.captchaOptions.map((obj, i) => (
                     <input key={i} value={JSON.stringify(obj, null, 2)} disabled className="mb-6" />
@@ -159,7 +159,7 @@ export default function BypassCaptchaAPI({
           </form>
 
           <JsonViewer
-            className="w-full xl:w-[50%]"
+            className="w-full xl:w-[50%] h-full"
             json={JSON.stringify(response, null, 2)}
             status={resStatusObj?.status ?? NaN}
             statusText={resStatusObj?.statusText ?? ""}
