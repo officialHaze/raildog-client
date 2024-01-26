@@ -9,6 +9,9 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import Fetcher from "../../classes/Fetcher";
 import UserDetails from "../../interfaces/UserDetails";
 import UsernameSkeleton from "../Decorations/UsernameSkeleton";
+import truncateText from "../../utils/truncate";
+import { useHoverInfoBox } from "../../utils/customHooks";
+import HoverInfoBox from "../HoverInfoBox";
 import SidePanelFloater from "./SidePanelFloater";
 import Constants from "../../classes/Constants";
 
@@ -26,12 +29,18 @@ const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
 // const isQuerySuccess = (query: UseQueryResult<UserDetailsResponse, Error>) =>
 //   query.status === "success";
 
+const getUsername = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+  query.data?.user_details.username || "";
+
+const isTextMoreThanMaxLen = (text: string, maxLen: number) => text.length > maxLen;
+
 export default function SidePanel(props: Props) {
   const setIsAuthenticated = useContext(AuthContext);
   const userDetailsQuery = useQuery<UserDetailsResponse, Error>({
     queryKey: ["user-details"],
     queryFn: Fetcher.fetchUserDetails,
   });
+  const { displayHoverInfoBox, hoverInfoBody, setHoverInfoStatus } = useHoverInfoBox();
 
   if (!setIsAuthenticated) throw new Error("Auth context value is null");
 
@@ -40,11 +49,28 @@ export default function SidePanel(props: Props) {
       id={Constants.SIDE_PANEL}
       className={`${props.className} text-white bg-github-black-secondary h-full white-border-r`}
     >
+      {isTextMoreThanMaxLen(getUsername(userDetailsQuery), 9) && (
+        <HoverInfoBox
+          body={hoverInfoBody}
+          className={`top-[6.5rem] left-4 ${displayHoverInfoBox ? "scale-100" : "scale-0"}`}
+        />
+      )}
+      <div className="header h-[17%] py-6 px-4 flex flex-col items-center gap-2 white-border">
       <SidePanelFloater className="-right-6 top-44" />
       <div className="header h-[17%] py-6 px-6 flex flex-col items-center gap-2 white-border">
         <FaUserAstronaut className="text-4xl" />
-        <h2>{userDetailsQuery.data?.user_details.username}</h2>
-
+        <h2
+          className="cursor-default relative"
+          onMouseOver={() =>
+            setHoverInfoStatus({
+              toDisplayHoverInfo: true,
+              infoBody: getUsername(userDetailsQuery),
+            })
+          }
+          onMouseLeave={() => setHoverInfoStatus({ toDisplayHoverInfo: false, infoBody: "" })}
+        >
+          {truncateText(getUsername(userDetailsQuery))}
+        </h2>
         {isQueryFailed(userDetailsQuery) && <em>Error</em>}
         {isQueryStatusPending(userDetailsQuery) && <UsernameSkeleton />}
       </div>
