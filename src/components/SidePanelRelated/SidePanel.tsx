@@ -5,11 +5,31 @@ import logout from "../../utils/AuthRelated/logout";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import sidePanelOptions from "../../utils/SidePanelRelated/SidePanelOptions";
 import SidePanelOption from "./SidePanelOption";
+import { UseQueryResult, useQuery } from "@tanstack/react-query";
+import Fetcher from "../../classes/Fetcher";
+import UserDetails from "../../interfaces/UserDetails";
+import UsernameSkeleton from "../Decorations/UsernameSkeleton";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {}
 
+interface UserDetailsResponse {
+  message: string;
+  user_details: UserDetails;
+}
+
+const isQueryStatusPending = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+  query.status === "pending";
+const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+  query.status === "error";
+// const isQuerySuccess = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+//   query.status === "success";
+
 export default function SidePanel(props: Props) {
   const setIsAuthenticated = useContext(AuthContext);
+  const userDetailsQuery = useQuery<UserDetailsResponse, Error>({
+    queryKey: ["user-details"],
+    queryFn: Fetcher.fetchUserDetails,
+  });
 
   if (!setIsAuthenticated) throw new Error("Auth context value is null");
 
@@ -19,7 +39,10 @@ export default function SidePanel(props: Props) {
     >
       <div className="header h-[17%] py-6 px-6 flex flex-col items-center gap-2 white-border">
         <FaUserAstronaut className="text-4xl" />
-        <h2>Moinak Dey</h2>
+        <h2>{userDetailsQuery.data?.user_details.username}</h2>
+
+        {isQueryFailed(userDetailsQuery) && <em>Error</em>}
+        {isQueryStatusPending(userDetailsQuery) && <UsernameSkeleton />}
       </div>
 
       <div className="bg-github-black-primary py-4 h-[75%] overflow-auto flex flex-col gap-4">

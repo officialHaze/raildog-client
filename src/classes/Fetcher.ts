@@ -29,4 +29,15 @@ export default class Fetcher {
       throw error;
     }
   }
+
+  public static async fetchUserDetails() {
+    try {
+      const { data } = await axiosInstance.get("/auth/get_user_details");
+      console.log("Response after fetching user details: ", data);
+
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
