@@ -25,6 +25,9 @@ export default class Constants {
   public static GET_TRAINS = "GET_TRAINS";
   public static GET_LIVE_STATUS = "GET_LIVE_STATUS";
   public static BYPASS_CAPTCHA = "BYPASS_CAPTCHA";
+
+  public static SIDE_PANEL = "SIDE_PANEL";
+  public static SIDE_PANEL_FLOATER = "SIDE_PANEL_FLOATER";
 }
 
 export class ModalTypes extends Constants {

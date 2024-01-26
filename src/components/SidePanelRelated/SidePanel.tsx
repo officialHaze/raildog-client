@@ -9,6 +9,8 @@ import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import Fetcher from "../../classes/Fetcher";
 import UserDetails from "../../interfaces/UserDetails";
 import UsernameSkeleton from "../Decorations/UsernameSkeleton";
+import SidePanelFloater from "./SidePanelFloater";
+import Constants from "../../classes/Constants";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {}
 
@@ -35,8 +37,10 @@ export default function SidePanel(props: Props) {
 
   return (
     <div
-      className={`${props.className} text-white bg-github-black-secondary h-full w-[15%] white-border-r`}
+      id={Constants.SIDE_PANEL}
+      className={`${props.className} text-white bg-github-black-secondary h-full white-border-r`}
     >
+      <SidePanelFloater className="-right-6 top-44" />
       <div className="header h-[17%] py-6 px-6 flex flex-col items-center gap-2 white-border">
         <FaUserAstronaut className="text-4xl" />
         <h2>{userDetailsQuery.data?.user_details.username}</h2>
