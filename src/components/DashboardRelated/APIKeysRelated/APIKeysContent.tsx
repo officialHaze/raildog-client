@@ -57,9 +57,8 @@ export default function APIKeysContent() {
       </div>
       <div className="para text-lg px-4 py-4">
         <p>
-          You need an API key to make requests and get train related status. Raildog allows you to
-          generate a maximum of 4 API Keys per account which you can enable or disable as per your
-          choice.
+          You need an API key to get successful responses. Raildog allows you to generate a maximum
+          of 4 API Keys per account which you can enable or disable as per your choice.
         </p>
       </div>
       <div className="sub-header px-4 py-4">

@@ -2,6 +2,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { SideOptionSelectCtx, SideOptionSelectState } from "../../pages/Dashboard";
 import { IoMdArrowDropright, IoMdArrowDropdown } from "react-icons/io";
 import SidePanelSubOption from "./SidePanelSubOption";
+import Constants from "../../classes/Constants";
 
 interface SidePanelSubOptionData {
   name: string;
@@ -38,6 +39,7 @@ export default function SidePanelOption({ optionName, id, suboptions }: Props) {
   return (
     <div>
       <div
+        id={`${Constants.SIDE_PANEL}_OPTION`}
         className={`transition ease-in ${
           suboptions.length > 0 ? "px-4" : "px-6"
         } py-2 font-bold text-lg cursor-pointer flex items-center gap-1 ${
@@ -49,9 +51,17 @@ export default function SidePanelOption({ optionName, id, suboptions }: Props) {
       >
         {suboptions.length > 0 &&
           (!arrowDown ? (
-            <IoMdArrowDropright className="text-xl" onClick={() => showArrowDown(true)} />
+            <IoMdArrowDropright
+              id={`${Constants.SIDE_PANEL}_SUB_OPTION_ARROW_RIGHT`}
+              className="text-xl"
+              onClick={() => showArrowDown(true)}
+            />
           ) : (
-            <IoMdArrowDropdown className="text-xl" onClick={() => showArrowDown(false)} />
+            <IoMdArrowDropdown
+              id={`${Constants.SIDE_PANEL}_SUB_OPTION_ARROW_DOWN`}
+              className="text-xl"
+              onClick={() => showArrowDown(false)}
+            />
           ))}
         {optionName}
       </div>
