@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import LabelData from "../interfaces/LabelData";
 import Mappings from "../classes/Mappings";
 import LoginData from "../interfaces/LoginData";
@@ -190,4 +190,22 @@ export const useFocusOut = ({
       document.removeEventListener("focusout", handleFocusout);
     };
   }, [labelPos, setLabelPos, labels, focusOutData]);
+};
+
+export const useHoverInfoBox = () => {
+  const [displayHoverInfoBox, toDisplayHoverInfoBox] = useState(false);
+  const [hoverInfoBody, setHoverInfoBody] = useState<ReactNode | string>("");
+
+  const setHoverInfoStatus = ({
+    toDisplayHoverInfo,
+    infoBody,
+  }: {
+    toDisplayHoverInfo: boolean;
+    infoBody: string | ReactNode;
+  }) => {
+    toDisplayHoverInfoBox(toDisplayHoverInfo);
+    setHoverInfoBody(infoBody);
+  };
+
+  return { displayHoverInfoBox, hoverInfoBody, setHoverInfoStatus };
 };
