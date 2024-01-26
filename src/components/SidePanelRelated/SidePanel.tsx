@@ -55,9 +55,8 @@ export default function SidePanel(props: Props) {
           className={`top-[6.5rem] left-4 ${displayHoverInfoBox ? "scale-100" : "scale-0"}`}
         />
       )}
-      <div className="header h-[17%] py-6 px-4 flex flex-col items-center gap-2 white-border">
       <SidePanelFloater className="-right-6 top-44" />
-      <div className="header h-[17%] py-6 px-6 flex flex-col items-center gap-2 white-border">
+      <div className="header h-[17%] py-6 px-2 flex flex-col items-center gap-2 white-border">
         <FaUserAstronaut className="text-4xl" />
         <h2
           className="cursor-default relative"
