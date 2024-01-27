@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Constants, { SidePanelOptionsId } from "../../../classes/Constants";
 import BypassCaptchaReqBody from "../../../interfaces/states/BypassCaptchaReqBody";
 import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
@@ -29,6 +30,13 @@ export default function BypassCaptchaAPI({
   isLoaderRunning,
   apikey,
 }: BypassCaptchaAPICompProps) {
+  const [captchaBase64, setCaptchaBase64] = useState("");
+
+  // Handle captcha display
+  const displayCaptcha = () => {
+    setCaptchaBase64(requestBody.captchaBase64);
+  };
+
   return (
     <div>
       <div id={SidePanelOptionsId.RAILDOG_SUB_BYPASS_CAPTCHA} className="header p-4 white-border">
@@ -64,7 +72,7 @@ export default function BypassCaptchaAPI({
         <div className="flex flex-col xl:flex-row justify-between py-6">
           <form
             id={Constants.BYPASS_CAPTCHA}
-            className="required-fields flex flex-col gap-8 pr-0 xl:pr-20 w-full xl:w-[50%]"
+            className="required-fields flex flex-col gap-8 pr-0 xl:pr-14 w-full xl:w-[50%]"
             onSubmit={handleSubmit}
           >
             <div className="flex w-full items-start gap-4">
@@ -86,7 +94,7 @@ export default function BypassCaptchaAPI({
 
             <div className="flex w-full items-start gap-4">
               <p className="w-[20%]">captchaCode: </p>
-              <div className="w-[80%]">
+              <div className="w-[50%]">
                 <input
                   id={Constants.CAPTCHA_CODE}
                   value={requestBody.captchaCode}
@@ -99,6 +107,17 @@ export default function BypassCaptchaAPI({
                 />
                 <em className="text-sm">*Required</em>
               </div>
+              {requestBody.captchaBase64 && (
+                <div>
+                  <i
+                    onClick={displayCaptcha}
+                    className="bg-blue-500 hover:bg-blue-400 p-2 rounded-md text-sm font-bold cursor-pointer"
+                  >
+                    Show Captcha
+                  </i>
+                  {captchaBase64 && <img className="mt-2" src={captchaBase64} alt="captcha" />}
+                </div>
+              )}
             </div>
 
             <div className="flex w-full items-start gap-4">
