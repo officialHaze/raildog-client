@@ -8,7 +8,7 @@ const sidePanelOptions = [
   },
 
   {
-    name: "Raildog",
+    name: "API Playground",
     id: SidePanelOptionsId.RAILDOG_API,
     suboptions: [
       {
@@ -31,11 +31,11 @@ const sidePanelOptions = [
     ],
   },
 
-  {
-    name: "Documentation",
-    id: SidePanelOptionsId.DOC,
-    suboptions: [],
-  },
+  // {
+  //   name: "Documentation",
+  //   id: SidePanelOptionsId.DOC,
+  //   suboptions: [],
+  // },
 ];
 
 export default sidePanelOptions;
