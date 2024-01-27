@@ -14,6 +14,8 @@ import LiveStatusData from "../../../interfaces/LiveStatusData";
 import LiveStatusAuthData from "../../../interfaces/LiveStatusAuthData";
 import BypassCaptchaAPI, { BypassCaptchaAPICompProps } from "./BypassCaptchaAPI";
 import BypassCaptchaReqBody from "../../../interfaces/states/BypassCaptchaReqBody";
+import formatDate from "../../../utils/DateRelated/formatDate";
+import isValidDate from "../../../utils/DateRelated/isValidDate";
 
 export interface GetTrainsResponse {
   message: string;
@@ -132,10 +134,11 @@ export default function RaildogAPIContent() {
         // Remove any pre-loaded error
         removeError(Constants.TRAVEL_DATE);
 
-        setGetTrainsRequestBody({
-          ...getTrainsRequestBody,
-          travelDate: value,
-        });
+        if (isValidDate(value))
+          setGetTrainsRequestBody({
+            ...getTrainsRequestBody,
+            travelDate: value,
+          });
         break;
 
       case Constants.PHPSESSID:
@@ -182,10 +185,11 @@ export default function RaildogAPIContent() {
         // Remove any pre-loaded error
         removeError(Constants.DATE);
 
-        setGetLiveStatusRequestBody({
-          ...getLiveStatusRequestBody,
-          date: value,
-        });
+        if (isValidDate(value))
+          setGetLiveStatusRequestBody({
+            ...getLiveStatusRequestBody,
+            date: formatDate(value),
+          });
         break;
 
       // Bypass captcha related
