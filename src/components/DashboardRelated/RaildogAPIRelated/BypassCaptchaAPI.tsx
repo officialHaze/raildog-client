@@ -37,7 +37,7 @@ export default function BypassCaptchaAPI({
 
       <div className="para text-lg px-4 py-4 flex flex-col gap-4">
         <p>
-          Call this API when you get a 403 response by calling the Live Status API. All The fields
+          Call this API when you get a 403 response by querying the Live Status API. All The fields
           required to make a successful request are provided in the 403 response itself and are also
           mentioned below.
         </p>
@@ -165,7 +165,17 @@ export default function BypassCaptchaAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
-        <StatusChart />
+        <StatusChart
+          rows={[
+            <tr>
+              <td className="py-2 px-4 white-border-all text-green-500">200</td>
+              <td className="py-2 px-4 white-border-all">
+                Good response. You should get a success message and a phpsessid that you can use to
+                query the live status API.
+              </td>
+            </tr>,
+          ]}
+        />
       </div>
     </div>
   );

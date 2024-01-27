@@ -4,7 +4,7 @@ import ResponseStatusObj from "../../../interfaces/states/ResponseStatusObj";
 import JsonViewer from "../../Decorations/JsonViewer";
 import APIEndpoint from "./APIEndpoint";
 import GetResponseBtn from "./GetResponseBtn";
-import LiveStatus403ResponseCol from "./LiveStatus403ResponseCol";
+import LiveStatus403ResponseRow from "./LiveStatus403ResponseRow";
 import {
   ErrorResponse,
   GetLiveStatusAuthResponse,
@@ -172,7 +172,6 @@ export default function LiveStatusAPI({
                     "outline-red-500 focus:outline-red-500"
                   }`}
                 />
-                {/* <em className="text-sm">*Required</em> */}
               </div>
             </div>
             <GetResponseBtn isLoaderRunning={isLoaderRunning} />
@@ -185,7 +184,17 @@ export default function LiveStatusAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
-        <StatusChart column={<LiveStatus403ResponseCol />} />
+        <StatusChart
+          rows={[
+            <tr>
+              <td className="py-2 px-4 white-border-all text-green-500">200</td>
+              <td className="py-2 px-4 white-border-all">
+                Good response. You should get live status of the chosen train.
+              </td>
+            </tr>,
+            <LiveStatus403ResponseRow />,
+          ]}
+        />
       </div>
     </div>
   );
