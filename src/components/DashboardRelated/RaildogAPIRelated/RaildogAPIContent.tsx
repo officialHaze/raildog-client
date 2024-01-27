@@ -337,6 +337,17 @@ export default function RaildogAPIContent() {
           });
           break;
 
+        case Constants.BYPASS_CAPTCHA:
+          setBypassCaptchaResponse({
+            error: err?.response?.data?.Error?.message ?? "Some error occurred!",
+          });
+
+          setBypassCaptchaResStatusObj({
+            status: err?.response?.status ?? NaN,
+            statusText: err?.response?.statusText ?? "",
+          });
+          break;
+
         default:
           break;
       }

@@ -13,6 +13,7 @@ import { APIKeyObj } from "../interfaces/states/APIKeysQueryData";
 import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import GetLiveStatusReqBody from "../interfaces/states/GetLiveStatusReqBody";
 import BypassCaptchaReqBody from "../interfaces/states/BypassCaptchaReqBody";
+import isObjectEmpty from "../utils/isObjectEmpty";
 
 export default class Handler {
   public startLoader: () => void;
@@ -353,8 +354,8 @@ export default class Handler {
     } else if (err.response) {
       const errstatus = err.response.status;
 
-      const errmsg =
-        err.response.data.Error?.message || err.response.data.Error || "Unexpected error!";
+      let errmsg = err.response.data.Error?.message || err.response.data.Error;
+      if (!errmsg || isObjectEmpty(errmsg)) errmsg = "Unexpected Error!";
 
       if (errstatus === 401) {
         return callback(errstatus);
