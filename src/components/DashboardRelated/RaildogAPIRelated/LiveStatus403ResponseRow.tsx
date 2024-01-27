@@ -1,4 +1,4 @@
-export default function LiveStatus403ResponseCol() {
+export default function LiveStatus403ResponseRow() {
   return (
     <tr>
       <td className="py-2 px-4 white-border-all text-red-500">403</td>

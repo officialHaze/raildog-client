@@ -35,18 +35,21 @@ export default function FindTrainsAPI({
       </div>
 
       <div className="para text-lg px-4 py-4 flex flex-col gap-4">
-        <p>Get a list of trains for a given time period.</p>
+        <p>Get a list of trains based on your starting point and destination.</p>
         <p>
           <span className="font-bold">Required</span> : API Key.
         </p>
         <p>
-          <span className="font-bold">Required</span> : startStation (source).
+          <span className="font-bold">Required</span> : startStation (Station code from where you
+          want to start the journey).
         </p>
         <p>
-          <span className="font-bold">Required</span> : stopStation (destination).
+          <span className="font-bold">Required</span> : stopStation (Station code of the
+          destination, where you want to end the journey).
         </p>
         <p>
-          <span className="font-bold">Not Required</span> : travelDate (YYYYMxlD).
+          <span className="font-bold">Not Required</span> : travelDate (The date you want to travel.
+          Follow the mentioned format - YYYYMMDD).
         </p>
 
         <APIEndpoint apikey={apikey} />
@@ -133,7 +136,16 @@ export default function FindTrainsAPI({
             statusText={resStatusObj?.statusText ?? ""}
           />
         </div>
-        <StatusChart />
+        <StatusChart
+          rows={[
+            <tr>
+              <td className="py-2 px-4 white-border-all text-green-500">200</td>
+              <td className="py-2 px-4 white-border-all">
+                Good response. You should get a list of all the available trains.
+              </td>
+            </tr>,
+          ]}
+        />
       </div>
     </div>
   );
