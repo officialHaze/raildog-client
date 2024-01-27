@@ -1,4 +1,4 @@
 {
-    "intro": "The current version of Raildog API provides information related to Indian Railways such as list of trains, their operational hours and stations for a given period of time and get the live status of particular trains as well.",
+    "intro": "The current version of Raildog API provides information about Indian Railways such as list of available trains, their operational hours for a given period of time and also get the live status of particular trains.",
     "intro2": "API key is required to get a successful response, so if you haven't created an API key go to the API Keys section above and create one."
 }
