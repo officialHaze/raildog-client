@@ -24,8 +24,8 @@ interface UserDetailsResponse {
 
 const isQueryStatusPending = (query: UseQueryResult<UserDetailsResponse, Error>) =>
   query.status === "pending";
-const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
-  query.status === "error";
+// const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+//   query.status === "error";
 // const isQuerySuccess = (query: UseQueryResult<UserDetailsResponse, Error>) =>
 //   query.status === "success";
 
@@ -70,7 +70,6 @@ export default function SidePanel(props: Props) {
         >
           {truncateText(getUsername(userDetailsQuery))}
         </h2>
-        {isQueryFailed(userDetailsQuery) && <em>Error</em>}
         {isQueryStatusPending(userDetailsQuery) && <UsernameSkeleton />}
       </div>
 
