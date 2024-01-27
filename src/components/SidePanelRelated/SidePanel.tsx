@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { FaUserAstronaut } from "react-icons/fa6";
 import { AuthContext, PopupContext } from "../../App";
 import logout from "../../utils/AuthRelated/logout";
 import { RiLogoutCircleLine } from "react-icons/ri";
@@ -16,6 +15,7 @@ import SidePanelFloater from "./SidePanelFloater";
 import Constants from "../../classes/Constants";
 import Handler from "../../classes/Handler";
 import replaceTokens from "../../utils/AuthRelated/replaceTokens";
+import { FaUserCircle } from "react-icons/fa";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {}
 
@@ -79,7 +79,7 @@ export default function SidePanel(props: Props) {
       )}
       <SidePanelFloater className="-right-6 top-44" />
       <div className="header h-[17%] py-6 px-2 flex flex-col items-center gap-2 white-border">
-        <FaUserAstronaut className="text-4xl" />
+        <FaUserCircle className="text-5xl" />
         <h2
           className="cursor-default relative"
           onMouseOver={() =>

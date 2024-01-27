@@ -133,6 +133,7 @@ export default function LiveStatusAPI({
                   value={requestBody.at_stn}
                   onChange={handleChange}
                   autoComplete="off"
+                  placeholder="Station code"
                   className={`${
                     invalidFields.includes(Constants.AT_STN) &&
                     "outline-red-500 focus:outline-red-500"
@@ -150,6 +151,7 @@ export default function LiveStatusAPI({
                   value={requestBody.date}
                   onChange={handleChange}
                   autoComplete="off"
+                  placeholder="DDMMYYYY"
                   className={`${
                     invalidFields.includes(Constants.DATE) &&
                     "outline-red-500 focus:outline-red-500"

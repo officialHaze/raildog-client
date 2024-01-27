@@ -45,9 +45,9 @@ export default function BypassCaptchaAPI({
 
       <div className="para text-lg px-4 py-4 flex flex-col gap-4">
         <p>
-          Call this API when you get a 403 response by querying the Live Status API. All The fields
-          required to make a successful request are provided in the 403 response itself and are also
-          mentioned below.
+          Call this API when you get a 403 response while querying the Live Status API. All The
+          fields required to make a successful request are provided in the 403 response itself and
+          are also mentioned below.
         </p>
         <p>
           <span className="font-bold">Required</span> : API Key.

@@ -85,6 +85,7 @@ export default function FindTrainsAPI({
                   value={requestBody.startStation}
                   onChange={handleChange}
                   autoComplete="off"
+                  placeholder="Station code"
                   className={`${
                     invalidFields.includes(Constants.START_STATION) &&
                     "outline-red-500 focus:outline-red-500"
@@ -102,6 +103,7 @@ export default function FindTrainsAPI({
                   value={requestBody.stopStation}
                   onChange={handleChange}
                   autoComplete="off"
+                  placeholder="Station code"
                   className={`${
                     invalidFields.includes(Constants.STOP_STATION) &&
                     "outline-red-500 focus:outline-red-500"
@@ -119,6 +121,7 @@ export default function FindTrainsAPI({
                   value={requestBody.travelDate}
                   onChange={handleChange}
                   autoComplete="off"
+                  placeholder="YYYYMMDD"
                   className={`${
                     invalidFields.includes(Constants.TRAVEL_DATE) &&
                     "outline-red-500 focus:outline-red-500"
