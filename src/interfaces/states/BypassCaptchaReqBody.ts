@@ -5,4 +5,5 @@ export default interface BypassCaptchaReqBody {
   sD: string;
   phpsessid: string;
   captchaOptions: CaptchaOption[];
+  captchaBase64: string;
 }

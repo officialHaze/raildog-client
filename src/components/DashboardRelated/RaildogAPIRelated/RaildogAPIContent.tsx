@@ -57,6 +57,7 @@ export default function RaildogAPIContent() {
     captchaCode: "",
     sD: "",
     captchaOptions: [],
+    captchaBase64: "",
   });
 
   const [getTrainsresponse, setGetTrainsResponse] = useState<GetTrainsResponse | ErrorResponse>({
@@ -317,12 +318,13 @@ export default function RaildogAPIContent() {
               message: err?.response?.data?.message,
             });
 
-            // Set the captcha options value in bypass captcha api
+            // Set the required fields for bypass captcha API
             setBypassCaptchaReqBody({
               ...bypassCaptchaReqBody,
               captchaOptions: err?.response?.data?.message?.captchaOptions,
               sD: err?.response?.data?.message?.sD,
               phpsessid: err?.response?.data?.message?.phpsessid,
+              captchaBase64: err?.response?.data?.message?.captchaDataUrl,
             });
           } else
             setLiveStatusResponse({
