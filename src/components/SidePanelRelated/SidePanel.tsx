@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { FaUserAstronaut } from "react-icons/fa6";
-import { AuthContext } from "../../App";
+import { AuthContext, PopupContext } from "../../App";
 import logout from "../../utils/AuthRelated/logout";
 import { RiLogoutCircleLine } from "react-icons/ri";
 import sidePanelOptions from "../../utils/SidePanelRelated/SidePanelOptions";
@@ -10,10 +10,12 @@ import Fetcher from "../../classes/Fetcher";
 import UserDetails from "../../interfaces/UserDetails";
 import UsernameSkeleton from "../Decorations/UsernameSkeleton";
 import truncateText from "../../utils/truncate";
-import { useHoverInfoBox } from "../../utils/customHooks";
+import { useHoverInfoBox, useLoader } from "../../utils/customHooks";
 import HoverInfoBox from "../HoverInfoBox";
 import SidePanelFloater from "./SidePanelFloater";
 import Constants from "../../classes/Constants";
+import Handler from "../../classes/Handler";
+import replaceTokens from "../../utils/AuthRelated/replaceTokens";
 
 interface Props extends React.HTMLAttributes<HTMLElement> {}
 
@@ -24,8 +26,8 @@ interface UserDetailsResponse {
 
 const isQueryStatusPending = (query: UseQueryResult<UserDetailsResponse, Error>) =>
   query.status === "pending";
-// const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
-//   query.status === "error";
+const isQueryFailed = (query: UseQueryResult<UserDetailsResponse, Error>) =>
+  query.status === "error";
 // const isQuerySuccess = (query: UseQueryResult<UserDetailsResponse, Error>) =>
 //   query.status === "success";
 
@@ -41,8 +43,28 @@ export default function SidePanel(props: Props) {
     queryFn: Fetcher.fetchUserDetails,
   });
   const { displayHoverInfoBox, hoverInfoBody, setHoverInfoStatus } = useHoverInfoBox();
+  const { startLoader, endLoader } = useLoader();
+  const setPopupDisplay = useContext(PopupContext);
 
   if (!setIsAuthenticated) throw new Error("Auth context value is null");
+  if (!setPopupDisplay) throw new Error("Set popup display ctx value not provided");
+
+  // If the query fails, check the error status and take actions accordingly
+  if (isQueryFailed(userDetailsQuery)) {
+    const handler = new Handler(startLoader, endLoader, setPopupDisplay);
+    handler.handleError(userDetailsQuery.error, async (errStatus?: number) => {
+      if (errStatus && errStatus === 401) {
+        try {
+          await replaceTokens();
+          // Call the method again
+          userDetailsQuery.refetch();
+        } catch (err) {
+          console.error(err);
+          logout({ setIsAuthenticated });
+        }
+      }
+    });
+  }
 
   return (
     <div
