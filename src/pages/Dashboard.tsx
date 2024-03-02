@@ -26,7 +26,7 @@ export default function Dashboard() {
           <SidePanel
             className={`absolute w-[50%] sm:w-[40%] md:w-[30%] lg:w-[25%] xl:w-[15%] transition-all ${
               !slideInSidePanel ? "-translate-x-[100%]" : "translate-x-0"
-            } lg:block lg:relative lg:translate-x-0`}
+            } lg:block lg:relative lg:translate-x-0 z-10`}
           />
         </SlideInSidePanelCtx.Provider>
         <DashboardContent selectedOpt={isSelected} />
