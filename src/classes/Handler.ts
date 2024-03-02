@@ -14,6 +14,7 @@ import GetTrainsReqBody from "../interfaces/states/GetTrainsReqBody";
 import GetLiveStatusReqBody from "../interfaces/states/GetLiveStatusReqBody";
 import BypassCaptchaReqBody from "../interfaces/states/BypassCaptchaReqBody";
 import isObjectEmpty from "../utils/isObjectEmpty";
+import { PasswordResetData } from "../interfaces/PasswordResetData";
 
 export default class Handler {
   public startLoader: () => void;
@@ -330,6 +331,102 @@ export default class Handler {
       this.handleError(err, (errstatus?: number) => {
         this.endLoader();
         throw err;
+      });
+    }
+  }
+
+  // Handle sending the verification code
+  public async handleSendingVerificationCode(
+    email: string,
+    setIsVerificationCodeSent: React.Dispatch<React.SetStateAction<boolean>>
+  ) {
+    try {
+      this.startLoader();
+      const { data } = await axiosInstance.post("/send_verification_code", {
+        username_or_email: email,
+      });
+      this.endLoader();
+
+      console.log("Verification Code response: ", data);
+
+      this.setPopup &&
+        this.setPopup({
+          toDisplay: true,
+          message: "Verification code sent to the registered email id.",
+          popupType: PopupTypes.SUCCESS_POPUP,
+        });
+
+      setIsVerificationCodeSent(true);
+    } catch (err: any) {
+      this.handleError(err, (errStatus?: number) => {
+        this.endLoader();
+      });
+    }
+  }
+
+  // Handle resetting the password
+  public async handleResettingThePassword(
+    passwordResetData: PasswordResetData,
+    closeModal: () => void
+  ) {
+    try {
+      if (!this.setPopup) return;
+
+      console.log(passwordResetData);
+
+      // Validate all the data before calling the API
+      if (!passwordResetData.verificationCode)
+        return this.setPopup({
+          toDisplay: true,
+          message: "Please enter the verification code sent to your registered email id!",
+          popupType: PopupTypes.ERROR_POPUP,
+        });
+      if (!passwordResetData.password)
+        return this.setPopup({
+          toDisplay: true,
+          message: "Please enter a new password to continue!",
+          popupType: PopupTypes.ERROR_POPUP,
+        });
+      if (!passwordResetData.confirmPassword)
+        return this.setPopup({
+          toDisplay: true,
+          message: "Please confirm your password before continuing!",
+          popupType: PopupTypes.ERROR_POPUP,
+        });
+
+      // Match and confirm the password
+      if (passwordResetData.password !== passwordResetData.confirmPassword)
+        return this.setPopup({
+          toDisplay: true,
+          message: "Passwords don't match!",
+          popupType: PopupTypes.ERROR_POPUP,
+        });
+
+      // Hash the new password
+      const hash = Hasher.hashPass(passwordResetData.password);
+      console.log("Hashed pass: ", hash);
+
+      this.startLoader();
+      const { data } = await axiosInstance.post("/reset_password", {
+        verification_code: passwordResetData.verificationCode,
+        username_or_email: passwordResetData.username,
+        new_password: hash,
+      });
+      this.endLoader();
+
+      console.log("Response after password reset: ", data);
+
+      this.setPopup &&
+        this.setPopup({
+          toDisplay: true,
+          message: "Password has been successfully reset!",
+          popupType: PopupTypes.SUCCESS_POPUP,
+        });
+
+      closeModal();
+    } catch (err: any) {
+      this.handleError(err, (errStatus?: number) => {
+        this.endLoader();
       });
     }
   }

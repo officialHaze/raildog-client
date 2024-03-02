@@ -28,11 +28,14 @@ export default class Constants {
 
   public static SIDE_PANEL = "SIDE_PANEL";
   public static SIDE_PANEL_FLOATER = "SIDE_PANEL_FLOATER";
+
+  public static FORGOT_PASSWORD = "FORGOT_PASSWORD";
 }
 
 export class ModalTypes extends Constants {
   public static REGISTER_MODAL = "REGISTER_MODAL";
   public static LOGIN_MODAL = "LOGIN_MODAL";
+  public static RESET_PASS_MODAL = "RESET_PASS_MODAL";
 }
 
 export class InputTypes {

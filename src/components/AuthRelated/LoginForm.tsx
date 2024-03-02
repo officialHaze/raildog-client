@@ -84,6 +84,13 @@ export default function LoginForm({
           btnDisplayText={isLoaderRunning ? <Loader /> : "Login"}
         />
 
+        <div
+          id={Constants.FORGOT_PASSWORD}
+          className="forgot-password text-center p-2 mb-2 cursor-pointer hover:underline underline-offset-2 hover:text-blue-600"
+        >
+          Forgot Password?
+        </div>
+
         <div className="text-center text-lg">
           Don't have an account?{" "}
           <span id={Constants.REGISTER_BTN} className="cursor-pointer text-raildog-blue">

@@ -82,6 +82,14 @@ function App() {
           });
           break;
 
+        case Constants.FORGOT_PASSWORD:
+          toDisplayModal({
+            toDisplay: true,
+            modalType: ModalTypes.RESET_PASS_MODAL,
+            payload: null,
+          });
+          break;
+
         default:
           break;
       }

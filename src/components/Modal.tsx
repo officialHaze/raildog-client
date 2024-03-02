@@ -1,6 +1,7 @@
 import Constants from "../classes/Constants";
 import LoginModal from "./AuthRelated/LoginModal";
 import RegisterModal from "./AuthRelated/RegisterModal";
+import ResetPasswordModal from "./AuthRelated/ResetPasswordModal";
 
 interface Props {
   modalType: string;
@@ -12,6 +13,7 @@ interface Props {
 const modalMap: any = {
   REGISTER_MODAL: <RegisterModal />,
   LOGIN_MODAL: <LoginModal />,
+  RESET_PASS_MODAL: <ResetPasswordModal />,
 };
 
 export default function Modal({ modalType, payload, className }: Props) {

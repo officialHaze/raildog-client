@@ -3,6 +3,7 @@ import LabelData from "../interfaces/LabelData";
 import Mappings from "../classes/Mappings";
 import LoginData from "../interfaces/LoginData";
 import RegistrationData from "../interfaces/RegistrationData";
+import { PasswordResetData } from "../interfaces/PasswordResetData";
 
 export const useRegistrationLabel = (): [
   label: LabelData,
@@ -176,7 +177,7 @@ export const useFocusOut = ({
   labelPos: LabelData;
   setLabelPos: React.Dispatch<React.SetStateAction<LabelData>>;
   labels: string[];
-  focusOutData: LoginData | RegistrationData;
+  focusOutData: LoginData | RegistrationData | PasswordResetData;
 }) => {
   // Monitor and handle focus in any of the input fields
   useEffect(() => {
